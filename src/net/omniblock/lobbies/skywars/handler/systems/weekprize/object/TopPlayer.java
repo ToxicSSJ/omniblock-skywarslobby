@@ -1,19 +1,14 @@
 package net.omniblock.lobbies.skywars.handler.systems.weekprize.object;
 
-import java.util.UUID;
-
 public class TopPlayer {
 
 	private String name;
-	private UUID uuid;
 	
 	private Integer points;
 	
-	public TopPlayer(String name, UUID uuid, Integer points){
+	public TopPlayer(String name, Integer points){
 		
 		this.name = name;
-		this.uuid = uuid;
-		
 		this.points = points;
 		
 	}
@@ -24,10 +19,6 @@ public class TopPlayer {
 
 	public Integer getPoints() {
 		return points;
-	}
-
-	public UUID getUuid() {
-		return uuid;
 	}
 	
 }

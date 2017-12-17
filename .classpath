@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/Omniblock-Packets"/>
 	<classpathentry kind="lib" path="C:/Gitlab/Citizens.jar"/>
 	<classpathentry kind="lib" path="C:/Gitlab/HolographicDisplays.jar"/>
+	<classpathentry kind="lib" path="C:/Gitlab/NoteBlockAPI-1.2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

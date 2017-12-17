@@ -12,6 +12,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarFlag;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -43,6 +47,7 @@ import net.omniblock.network.library.addons.resourceaddon.ResourceHandler;
 import net.omniblock.network.library.addons.resourceaddon.type.ResourceType;
 import net.omniblock.network.library.helpers.ItemBuilder;
 import net.omniblock.network.library.helpers.geometric.Cuboid;
+import net.omniblock.network.library.utils.TextUtil;
 import net.omniblock.network.systems.InformationCenterPatcher;
 import net.omniblock.network.systems.InformationCenterPatcher.Information;
 import net.omniblock.network.systems.InformationCenterPatcher.InformationType;
@@ -58,6 +63,8 @@ public class SkywarsLobby extends SidedLobby {
 	protected SkywarsLobby instance;
 	protected SkywarsLobbyBoard board;
 	
+	protected BossBar bar;
+	
 	public SkywarsLobby() {
 		super(new LobbySide[] {
 				SKYWARS_NORMAL_SIDE,
@@ -67,6 +74,8 @@ public class SkywarsLobby extends SidedLobby {
 	
 	@Override
 	public void setup() {
+		
+		bar = Bukkit.createBossBar(TextUtil.format("&6&lOmniblock Network &8« &7Estamos en fase &c&lBETA &8»"), BarColor.RED, BarStyle.SOLID, BarFlag.DARKEN_SKY);
 		
 		new BukkitRunnable() {
 			
@@ -124,6 +133,9 @@ public class SkywarsLobby extends SidedLobby {
 				PlayerUtils.forcePlayerGameMode(e.getPlayer(), GameMode.ADVENTURE);
 				PlayerUtils.clearPlayerInventory(e.getPlayer());
 				PlayerUtils.clearPlayerPotions(e.getPlayer());
+				
+				if(!bar.getPlayers().contains(e.getPlayer()))
+					bar.addPlayer(e.getPlayer());
 				
 				e.getPlayer().setAllowFlight(false);
 				e.getPlayer().setFlying(false);

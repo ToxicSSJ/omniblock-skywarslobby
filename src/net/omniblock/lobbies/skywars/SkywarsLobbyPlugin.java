@@ -34,7 +34,7 @@ public class SkywarsLobbyPlugin extends JavaPlugin {
 		
 	}
 	
-	public SkywarsLobbyPlugin getInstance() {
+	public static SkywarsLobbyPlugin getInstance() {
 		return instance;
 	}
 	

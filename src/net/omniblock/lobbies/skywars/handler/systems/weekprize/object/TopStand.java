@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 
 import net.omniblock.lobbies.skywars.handler.SkywarsLobby;
 
@@ -11,20 +12,46 @@ public class TopStand {
 
 	public static enum TopType {
 		
-		TOP_1(1),
-		TOP_2(2),
-		TOP_3(3),
+		TOP_1(1, 90, 0, "SkidzInc", Material.DIAMOND),
+		TOP_2(2, 90, 0, "Trajan", Material.GOLD_INGOT),
+		TOP_3(3, 90, 0, "TheSkidz", Material.IRON_INGOT),
 		
 		;
 		
-		private int top = 1;
+		private int top = 1, yaw = 0, pitch = 0;
 		
-		TopType(int top){
+		private String skinName = "SkidzInc";
+		private Material material = Material.AIR;
+		
+		TopType(int top, int yaw, int pitch, String skinName, Material material){
+			
 			this.top = top;
+			this.yaw = yaw;
+			this.pitch = pitch;
+			
+			this.skinName = skinName;
+			this.material = material;
+			
 		}
 		
 		public int getTop(){
 			return top;
+		}
+		
+		public int getYaw() {
+			return yaw;
+		}
+		
+		public int getPitch() {
+			return pitch;
+		}
+		
+		public String getSkinName() {
+			return skinName;
+		}
+		
+		public Material getMaterial() {
+			return material;
 		}
 		
 		public static TopType parseInt(int top){

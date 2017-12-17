@@ -1,4 +1,4 @@
 name: SkywarsLobby
 main: net.omniblock.lobbies.skywars.SkywarsLobbyPlugin
-softdepend: [OmniNetwork, OmniLobbies, HolographicDisplays, Citizens]
+softdepend: [OmniNetwork, OmniLobbies, HolographicDisplays, Citizens, NoteBlockAPI]
 version: 4.6.2

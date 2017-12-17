@@ -1,24 +1,46 @@
 package net.omniblock.lobbies.skywars.handler.systems.weekprize;
 
+import java.io.File;
 import java.time.LocalTime;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.ArmorStand;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Firework;
+import org.bukkit.entity.Item;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Dispenser;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.NumberConversions;
+import org.bukkit.util.Vector;
+
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import com.xxmicloxx.NoteBlockAPI.NBSDecoder;
+import com.xxmicloxx.NoteBlockAPI.RadioSongPlayer;
+import com.xxmicloxx.NoteBlockAPI.Song;
+import com.xxmicloxx.NoteBlockAPI.SongPlayer;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -27,12 +49,16 @@ import net.citizensnpcs.api.trait.trait.Equipment;
 import net.omniblock.lobbies.OmniLobbies;
 import net.omniblock.lobbies.api.Lobby;
 import net.omniblock.lobbies.api.object.LobbySystem;
+import net.omniblock.lobbies.apps.general.GeneralHandler;
+import net.omniblock.lobbies.skywars.SkywarsLobbyPlugin;
 import net.omniblock.lobbies.skywars.handler.SkywarsLobby;
 import net.omniblock.lobbies.skywars.handler.systems.weekprize.object.TopPlayer;
 import net.omniblock.lobbies.skywars.handler.systems.weekprize.object.TopStand;
 import net.omniblock.lobbies.skywars.handler.systems.weekprize.object.TopStand.TopType;
 import net.omniblock.lobbies.skywars.handler.systems.weekprize.packets.WeekPrizePackets;
 import net.omniblock.lobbies.skywars.handler.systems.weekprize.packets.WeekPrizePackets.WeekPrizeStatus;
+import net.omniblock.network.handlers.Handlers;
+import net.omniblock.network.handlers.base.bases.type.BankBase;
 import net.omniblock.network.handlers.base.sql.make.MakeAdvancedSQLQuery;
 import net.omniblock.network.handlers.base.sql.type.TableType;
 import net.omniblock.network.handlers.base.sql.util.Resolver;
@@ -40,14 +66,19 @@ import net.omniblock.network.handlers.base.sql.util.SQLResultSet;
 import net.omniblock.network.library.helpers.ItemBuilder;
 import net.omniblock.network.library.helpers.RandomFirework;
 import net.omniblock.network.library.helpers.effectlib.EffectManager;
+import net.omniblock.network.library.helpers.effectlib.effect.HelixEffect;
+import net.omniblock.network.library.helpers.effectlib.effect.LineEffect;
 import net.omniblock.network.library.helpers.effectlib.effect.TextEffect;
 import net.omniblock.network.library.helpers.effectlib.util.ParticleEffect;
+import net.omniblock.network.library.utils.FileRefactorUtil;
 import net.omniblock.network.library.utils.NumberUtil;
 import net.omniblock.network.library.utils.TextUtil;
+import net.omniblock.packets.util.Lists;
 
+@SuppressWarnings("deprecation")
 public class WeekPrizeSystem implements LobbySystem, Listener {
 
-	protected static final String TOP_QUERY_SQL = "SELECT p_id FROM skywars_weekprize ORDER BY p_points DESC LIMIT 3";
+	protected static final String TOP_QUERY_SQL = "SELECT * FROM skywars_weekprize ORDER BY p_points DESC LIMIT 3";
 	
 	protected BukkitTask task;
 	protected BukkitTask textTask;
@@ -56,10 +87,12 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 	protected Location topTextLocation;
 	protected SkywarsLobby lobby;
 	
-	protected boolean destroy = false;
+	protected boolean destroy = false, animation = false;
 	
-	protected Map<Integer, TopPlayer> topPlayers = new HashMap<Integer, TopPlayer>();
-	protected LinkedList<Entry<NPC, NPC>> topNPCs = new LinkedList<Entry<NPC, NPC>>();
+	protected Map<TopType, TopPlayer> topPlayers = new HashMap<TopType, TopPlayer>();
+	protected LinkedList<Entry<NPC, TextLine>> topNPCs = new LinkedList<Entry<NPC, TextLine>>();
+	
+	protected List<Item> omniCoins = new ArrayList<Item>();
 	
 	@Override
 	public void setup(Lobby lobby) {
@@ -86,6 +119,27 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 		
 	}
 
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPickup(PlayerPickupItemEvent e) {
+		
+		if(omniCoins.contains(e.getItem())) {
+			
+			e.setCancelled(true);
+			
+			e.getPlayer().sendMessage(TextUtil.format("&b¡Has encontrado una OmniCoin! &a&l+&a1 ⛃"));
+			e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
+			
+			BankBase.addMoney(e.getPlayer(), 1);
+			BankBase.addExp(e.getPlayer(), 10);
+			
+			omniCoins.remove(e.getItem());
+			e.getItem().remove();
+			return;
+			
+		}
+		
+	}
+	
 	private void updateTop(){
 		
 		updaterTask = new BukkitRunnable(){
@@ -100,26 +154,21 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 						return;
 					}
 					
-					topPlayers.clear();
-					
 					SQLResultSet query = new MakeAdvancedSQLQuery(TableType.TOP_STATS_WEEKPRIZE_SKYWARS)
 							.append(TOP_QUERY_SQL)
 							.execute();
 					
-					int index = 1;
+					int index = 0;
 					
 					while(query.next()){
 						
+						index++;
+						
 						TopPlayer player = new TopPlayer(
 								Resolver.getLastNameByNetworkID(query.get("p_id")),
-								Resolver.isPremium((String) query.get("p_id")) ?
-										Resolver.getOfflineUUIDByName(query.get("p_id")) :
-										Resolver.getOfflineUUIDByNetworkID(query.get("p_id")),
-								0);
+								query.get("p_points"));
 						
-						topPlayers.put(index, player);
-						
-						index++;
+						topPlayers.put(TopType.parseInt(index), player);
 						
 					}
 					
@@ -133,6 +182,22 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 	
 	private void displayCountdown(){
 		
+		File file = new File(SkywarsLobbyPlugin.getInstance().getDataFolder(), "/songs/weekprize_song.nbs");
+		
+		if (!file.exists()) {
+			
+			try {
+
+				file.getParentFile().mkdirs();
+				FileRefactorUtil.copyFile(SkywarsLobbyPlugin.getInstance().getResource("/songs/weekprize_song.nbs"), file);
+
+			} catch (Exception e) {
+				Handlers.LOGGER.sendError("Un error fatal al crear un archivo de texto!");
+				e.printStackTrace();
+			}
+			
+		}
+		
 		textTask = new BukkitRunnable(){
 			
 			EffectManager manager = new EffectManager(OmniLobbies.getInstance());
@@ -141,10 +206,9 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 			Location cacheloc = lobby.getLastScan().get("WEEK_PRIZE_TEXT").get(0);
 			Location location = new Location(cacheloc.getWorld(), cacheloc.getX(), cacheloc.getY() + 2, cacheloc.getZ(), -88, (float) 4.2);
 			
-			int animround = 0;
+			Song song = NBSDecoder.parse(file);
+			SongPlayer player = new RadioSongPlayer(song);
 			
-			boolean animation = false, animationp = false;
-		
 			@Override
 			public void run(){
 				
@@ -152,6 +216,9 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 					this.cancel();
 					return;
 				}
+				
+				if(animation)
+					return;
 				
 				Calendar until = Calendar.getInstance();
 				Calendar today = Calendar.getInstance();
@@ -175,159 +242,288 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 				effect.autoOrient = true;
 				effect.period = 15;
 				effect.iterations = 1;
-				
-				if(animround > 0 && animation){
+
+				if(countdown <= 5 && !animation) {
 					
-					animround++;
+					animation = true;
 					
-					if(animround > 0 && animround < 6)
-						for(int i = 0; i < 5; i++)
-							RandomFirework.spawnRandomFirework(location.clone().add(NumberUtil.getRandomInt(-5, 5), NumberUtil.getRandomInt(-5, 5), NumberUtil.getRandomInt(-5, 5)), 3);
+					List<Block> dispensers = Lists.newArrayList();
+					List<Location> locs = Lists.newArrayList();
+					List<Firework> firework = Lists.newArrayList();
 					
-					if(animround > 5 && animround < 11){
+					Bukkit.getOnlinePlayers().forEach(p -> player.addPlayer(p));
+					
+					player.setAutoDestroy(true);
+					player.setPlaying(true);
+					
+					new BukkitRunnable() {
 						
-						if(!animationp){
+						int phase = 1;
+						int cacheRound = 0;
+						
+						@Override
+						public void run() {
 							
-							animationp = true;
+							cacheRound++;
 							
-							new BukkitRunnable(){
+							if(cacheRound == 1 && phase == 1) {
 								
-								int soundpitch = 15;
-								int round = -1;
+								phase = 2;
 								
-								@SuppressWarnings("deprecation")
-								@Override
-								public void run(){
+								if(topNPCs.size() >= 3){
 									
-									round++;
+									topNPCs.forEach(entry -> {
+										
+										NPC npc = entry.getKey();
+										Hologram hologram = entry.getValue().getParent();
+										
+										locs.add(npc.getEntity().getLocation());
+										
+										hologram.delete();
+										RandomFirework.spawnRandomFirework(npc.getEntity().getLocation()).detonate();
+										
+										firework.add(RandomFirework.spawnRandomFirework(npc.getEntity().getLocation()));
+										npc.getEntity().setVelocity(new Vector(0, 1, 0));
+										
+									});
 									
-									if(round == 130){
-										
-										animround = 0;
-										
-										animation = false;
-										animationp = false;
-										
-										topNPCs.clear();
-										
-										topNPCs.add(spawnNPC(TopType.TOP_1.getStand(lobby), CitizensAPI.getNPCRegistry()));
-										topNPCs.add(spawnNPC(TopType.TOP_2.getStand(lobby), CitizensAPI.getNPCRegistry()));
-										topNPCs.add(spawnNPC(TopType.TOP_3.getStand(lobby), CitizensAPI.getNPCRegistry()));
-										
-										topNPCs.stream().forEach(entry -> entry.getKey().getEntity().getWorld().strikeLightningEffect(entry.getKey().getEntity().getLocation()));
-										
-										cancel();
-										return;
-										
-									}
+								}
+								
+							}
+							
+							if(cacheRound == 2 && phase == 2) {
+								
+								phase = 3;
+								
+								if(topNPCs.size() >= 3){
 									
-									if(round == 70){
+									for(int i = 0; i < 3; i++) {
 										
-										location.getWorld().playSound(location, Sound.ENTITY_ENDERDRAGON_DEATH, 10, 10);
+										NPC npc = topNPCs.get(i).getKey();
 										
-										topNPCs.stream().forEach(entry -> {
-											
-											location.getWorld().playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 10, 10);
-											
-											ParticleEffect.ENCHANTMENT_TABLE.display(cacheloc.getBlockX(), cacheloc.getBlockY(), cacheloc.getBlockZ(), 5, 50, location, 100);
-											
-											ParticleEffect.EXPLOSION_LARGE.display(entry.getValue().getEntity().getLocation().add(.5, 1, .5), 100);
-											ParticleEffect.LAVA.display(entry.getValue().getEntity().getLocation().add(.5, 1, .5), 100);
-											
-											entry.getValue().despawn();
-											
-										});
+										npc.getEntity().getLocation().getBlock().setType(Material.ANVIL);
 										
-										return;
-										
-									}
-									
-									if(round == 51){
-										
-										soundpitch = 20;
-										
-									}
-									
-									if(round > 51 && round < 70){
-										
-										location.getWorld().playSound(location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 10, soundpitch--);
-										location.getWorld().playSound(location, Sound.BLOCK_NOTE_BASS, 10, 10);
-										
-										topNPCs.stream().forEach(entry -> {
-											
-											entry.getValue().teleport(new Location(
-													location.getWorld(), 
-													entry.getValue().getEntity().getLocation().getX(),
-													entry.getValue().getEntity().getLocation().getY(),
-													entry.getValue().getEntity().getLocation().getZ(),
-													entry.getValue().getEntity().getLocation().getPitch(),
-													entry.getValue().getEntity().getLocation().getYaw()), TeleportCause.PLUGIN);
-											
-											ParticleEffect.EXPLOSION_NORMAL.display(entry.getValue().getEntity().getLocation().add(.5, 1, .5), 100);
-											
-										});
-										
-									}
-									
-									if(round < 51){
-										
-										location.getWorld().playSound(location, Sound.BLOCK_NOTE_PLING, 10, soundpitch--);
-										
-										topNPCs.stream().forEach(entry -> {
-											
-											entry.getValue().teleport(new Location(
-													location.getWorld(), 
-													entry.getValue().getEntity().getLocation().getX(),
-													entry.getValue().getEntity().getLocation().getY() + 0.2,
-													entry.getValue().getEntity().getLocation().getZ(),
-													entry.getValue().getEntity().getLocation().getPitch(),
-													entry.getValue().getEntity().getLocation().getYaw()), TeleportCause.PLUGIN);
-											
-											ParticleEffect.CLOUD.display(entry.getValue().getEntity().getLocation(), 100);
-											
-										});
+										if(firework.get(i) != null)
+											if(!firework.get(i).isDead())
+												firework.get(i).setPassenger(npc.getEntity()); firework.get(i).setVelocity(new Vector(0, 1, 0));
 										
 									}
 									
 								}
 								
-							}.runTaskTimer(OmniLobbies.getInstance(), 20L, 3L);
+							}
+							
+							if(cacheRound == 3 && phase == 3) {
+								
+								phase = 4;
+								
+								if(topNPCs.size() >= 3){
+									
+									for(int i = 0; i < 3; i++) {
+										
+										NPC npc = topNPCs.get(i).getKey();
+										
+										if(firework.get(i) != null)
+											if(!firework.get(i).isDead())
+												firework.get(i).detonate(); RandomFirework.spawnRandomFirework(npc.getEntity().getLocation()).detonate();
+										
+										npc.despawn();
+										
+									}
+									
+								}
+								
+							}
+							
+							if(cacheRound == 4 && phase == 4) {
+								
+								phase = 5;
+								
+								for(Location l : locs)
+									if(l.getBlock().getType() != Material.ANVIL)
+										l.getBlock().setType(Material.ANVIL);
+								
+								new BukkitRunnable() {
+									
+									int randomCounter = 0;
+									int randomFirework = 0;
+									
+									@Override
+									public void run() {
+										
+										randomCounter++;
+										randomFirework++;
+										
+										if(randomCounter <= 80) {
+											
+											Location lastloc = null;
+											
+											for(Location l : locs) {
+												
+												if(randomFirework % 40 == 0)
+													RandomFirework.spawnRandomFirework(l);
+												
+												lastloc = l;
+												
+												l.getBlock().getRelative(BlockFace.UP).setType(Material.WOOL);
+												l.getBlock().getRelative(BlockFace.UP).setData((byte) NumberUtil.getRandomInt(0, 15));
+												
+											}	
+											
+											if(lastloc != null) {
+												
+												if(randomFirework % 16 == 0)
+													lastloc.getWorld().playSound(lastloc, Sound.UI_BUTTON_CLICK, 1, 10);
+												
+											}
+												
+											
+										} else { this.cancel(); }
+										
+									}
+									
+								}.runTaskTimer(OmniLobbies.getInstance(), 0L, 1L);
+								
+							}
+							
+							if(cacheRound == 8 && phase == 5) {
+								
+								phase = 6;
+								
+								new BukkitRunnable() {
+									
+									int randomCounter = 0;
+									
+									@Override
+									public void run() {
+										
+										randomCounter++;
+										
+										if(randomCounter == 1) {
+											
+											Location lastloc = null;
+											
+											for(Location l : locs) {
+												
+												lastloc = l;
+												
+												l.getWorld().playSound(l, Sound.BLOCK_DISPENSER_DISPENSE, 5, -2);
+												l.getWorld().playSound(l, Sound.BLOCK_LAVA_POP, 5, -2);
+												
+												l.getBlock().getRelative(BlockFace.UP).setType(Material.DISPENSER);
+												l.getBlock().getRelative(BlockFace.UP).setData((byte) 4);
+												
+												Dispenser dispenser = (Dispenser) l.getBlock().getRelative(BlockFace.UP).getState().getData();
+												dispenser.setFacingDirection(BlockFace.WEST);
+												
+												l.getBlock().getRelative(BlockFace.UP).getState().setData(dispenser);
+												l.getBlock().getRelative(BlockFace.UP).getState().update(true);
+												
+												dispensers.add(l.getBlock().getRelative(BlockFace.UP).getState().getBlock());
+												
+											}
+											
+											if(lastloc != null)
+												lastloc.getWorld().playSound(lastloc, Sound.BLOCK_ANVIL_USE, 1, -1);
+											
+										}
+										
+										if(randomCounter >= 3 && randomCounter <= 12) {
+											
+											for(Block block : dispensers) {
+												
+												block.getWorld().playSound(block.getLocation(), Sound.ENTITY_CHICKEN_EGG, 5, 4);
+												
+												Item item = block.getWorld().dropItem(
+														block.getRelative(BlockFace.WEST).getLocation(),
+														new ItemBuilder(Material.EMERALD)
+															.name(TextUtil.format(UUID.randomUUID().toString().substring(1, 5)))
+															.build());
+												
+												omniCoins.add(item);
+												
+												moveOmniCoinBullet(item, block.getRelative(BlockFace.WEST).getLocation());
+												
+											}	
+											
+										}
+										
+										if(randomCounter >= 13)
+											this.cancel();
+										
+									}
+									
+								}.runTaskTimer(OmniLobbies.getInstance(), 5L, 5L);
+								
+							}
+							
+							if(cacheRound == 14) {
+								
+								for(Location l : locs) {
+									
+									Location secondLoc = l.clone().add(0, 10, 0);
+									
+									LineEffect ef = new LineEffect(GeneralHandler.getEffectLibManager());
+									ef.visibleRange = 300;
+									ef.particle = ParticleEffect.FIREWORKS_SPARK;
+									ef.iterations = 3;
+									ef.speed = 2;
+									ef.setLocation(l);
+									ef.setTargetLocation(secondLoc);
+									ef.start();
+									
+								}
+								
+							}
+							
+							if(cacheRound == 16) {
+								
+								effect.particle = ParticleEffect.FIREWORKS_SPARK;
+								effect.text = "¡PREMIOS REPARTIDOS!";
+								effect.start();
+								
+								HelixEffect ef = new HelixEffect(GeneralHandler.getEffectLibManager());
+								ef.visibleRange = 300;
+								ef.particle = ParticleEffect.SPELL_WITCH;
+								ef.iterations = 1;
+								ef.speed = 3;
+								ef.setLocation(location.clone().add(-4, -10, 0));
+								ef.start();
+								
+							}
+							
+							if(cacheRound == 48 && phase == 6) {
+								
+								this.cancel();
+								
+								phase = 7;
+								
+								for(Block b : dispensers) {
+									b.getRelative(BlockFace.DOWN).setType(Material.AIR);
+									b.setType(Material.AIR);
+									b.getWorld().strikeLightningEffect(b.getLocation());
+								}
+								
+								effect.getLocation().getWorld().playSound(effect.getLocation(), Sound.ENTITY_LIGHTNING_IMPACT, 5, 5);
+								effect.getLocation().getWorld().playSound(effect.getLocation(), Sound.BLOCK_ANVIL_BREAK, 5, 5);
+								
+								animation = false;
+								player.destroy();
+								
+								player = new RadioSongPlayer(song);
+								
+								topNPCs.clear();
+								displayTop();
+								
+							}
 							
 						}
 						
-					}
+					}.runTaskTimer(OmniLobbies.getInstance(), 0L, 20L);
 					
-				} else {
 					
-					countdown--;
 					
-					if(countdown < 5 && !animation){
-						
-						animround = 1;
-						animation = true;
-						
-						topNPCs.stream().forEach(entry -> {
-							
-							ArmorStand asnpc = (ArmorStand) entry.getValue().getEntity();
-							asnpc.getEquipment().setHelmet(
-									new ItemBuilder(Material.SKULL_ITEM)
-									.setSkullOwner(entry.getKey().getName())
-									.durability((short) 3)
-									.amount(1)
-									.build());
-							
-							asnpc.setCustomNameVisible(false);
-							
-							entry.getKey().despawn();
-							
-						});
-						return;
-						
-					}
-					
-					effect.start();
-					
-				}
+				} else { effect.start(); }
 				
 			}
 			
@@ -355,43 +551,51 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 				
 				task = new BukkitRunnable(){
 
+					int topRound = 0;
+					int updateRound = 300;
+					
 					@Override
 					public void run() {
 						
-						if(topPlayers.size() >= 3){
+						if(animation) {
+							this.cancel();
+							return;
+						}
+						
+						topRound++;
+						updateRound++;
+						
+						if(topRound >= 30) {
 							
-							TopPlayer[] tops = new TopPlayer[]{
+							topRound = 0;
+							
+							if(topPlayers.size() >= 3){
+								
+								for(int i = 0; i < 3; i++) {
 									
-									topPlayers.get(1),
-									topPlayers.get(2),
-									topPlayers.get(3)
+									TopType top = TopType.parseInt(i + 1);
+									TopPlayer player = topPlayers.get(top);
 									
-									};
-							
-							if(!topNPCs.get(0).getKey().isSpawned() ||
-									!topNPCs.get(1).getKey().isSpawned() ||
-									!topNPCs.get(2).getKey().isSpawned()) return;
-							
-							if(topNPCs.get(0).getKey().getName() != 
-									tops[0].getName()){
-								
-								topNPCs.get(0).getKey().setName(tops[0].getName());
-								topNPCs.get(0).getKey().data().set(NPC.PLAYER_SKIN_UUID_METADATA, tops[0].getName());
-								
-							}
-							if(topNPCs.get(1).getKey().getName() != 
-									tops[1].getName()){
-								
-								topNPCs.get(1).getKey().setName(tops[1].getName());
-								topNPCs.get(1).getKey().data().set(NPC.PLAYER_SKIN_UUID_METADATA, tops[1].getName());
-								
-							}
-							if(topNPCs.get(2).getKey().getName() != 
-									tops[2].getName()){
-								
-								topNPCs.get(2).getKey().setName(tops[2].getName());
-								topNPCs.get(2).getKey().data().set(NPC.PLAYER_SKIN_UUID_METADATA, tops[2].getName());
+									NPC npc = topNPCs.get(i).getKey();
+									TextLine line = topNPCs.get(i).getValue();
+									
+									if(!npc.isSpawned()) 
+										return;
+									
+									line.setText(TextUtil.format("&aTOP &l#" + top.getTop() + " &8- &7" + player.getPoints()));
+									
+									if(updateRound >= 300 || !npc.getName().equalsIgnoreCase(player.getName())){
 										
+										if(i == 2)
+											updateRound = 0;
+										
+										npc.setName(player.getName());
+										npc.data().set(NPC.PLAYER_SKIN_UUID_METADATA, player.getName());
+										
+									}
+									
+								}
+								
 							}
 							
 						}
@@ -406,12 +610,10 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 		
 	}
 	
-	private Entry<NPC, NPC> spawnNPC(TopStand stand, NPCRegistry registry){
+	private Entry<NPC, TextLine> spawnNPC(TopStand stand, NPCRegistry registry){
 		
 		NPC npc = registry.createNPC(EntityType.PLAYER, "Desconocido");
-		npc.data().set(NPC.PLAYER_SKIN_UUID_METADATA,
-				stand.getTop() == TopType.TOP_1 ? "SkidzInc" :
-				stand.getTop() == TopType.TOP_2 ? "Trajan" : "TheSkidz");
+		npc.data().set(NPC.PLAYER_SKIN_UUID_METADATA, stand.getTop().getSkinName());
 		
 		Location location = stand.getLocation();
 		
@@ -419,28 +621,19 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 				location.getWorld(),
 				location.getX(),
 				location.getY(),
-				location.getZ(), 
-				stand.getTop() == TopType.TOP_1 ? 89 :
-					stand.getTop() == TopType.TOP_2 ? 97 : 78,
-							stand.getTop() == TopType.TOP_1 ? 18 :
-								stand.getTop() == TopType.TOP_2 ? 10 : 9);
+				location.getZ());
+		
+		location.setYaw(stand.getTop().getYaw());
+		location.setPitch(stand.getTop().getPitch());
 		
 		npc.spawn(location);
 		npc.addTrait(Equipment.class);
 		npc.getEntity().setMetadata("NPC", new FixedMetadataValue(OmniLobbies.getInstance(), "NPC"));
 		
-		NPC hud = registry.createNPC(EntityType.ARMOR_STAND, TextUtil.format("&aTOP #" + stand.getTop().getTop() + " &8- &7" + 0));
-		hud.spawn(location);
+		Hologram hud = HologramsAPI.createHologram(OmniLobbies.getInstance(), location.clone().add(0, 3.3, 0));
+		hud.appendItemLine(new ItemStack(stand.getTop().getMaterial(), 1));
 		
-		ArmorStand entity = (ArmorStand) hud.getEntity();
-		
-		entity.setVisible(false);
-		entity.setCustomNameVisible(true);
-		entity.setGravity(false);
-		entity.setCanPickupItems(false);
-		entity.setBasePlate(false);
-		
-		return new AbstractMap.SimpleEntry<NPC, NPC>(npc, hud);
+		return new AbstractMap.SimpleEntry<NPC, TextLine>(npc, hud.appendTextLine(TextUtil.format("&aTOP &l#" + stand.getTop().getTop() + " &8- &7" + 0)));
 		
 	}
 	
@@ -465,10 +658,28 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 			lobby = null;
 		
 		topNPCs.forEach(entry -> {
-			entry.getValue().destroy();
+			entry.getValue().getParent().delete();
 			entry.getKey().destroy();
 		});
 		
 	}
 
+	public void moveOmniCoinBullet(Item bullet, Location to) {
+		
+		double multiply = 0.2;
+		
+		Location loc = bullet.getLocation();
+        double x = loc.getX() - to.getX();
+        double y = loc.getY() - to.getY();
+        double z = loc.getZ() - to.getZ();
+        
+        Vector v = new Vector(x, y, z).normalize().multiply(-multiply);
+    	
+    	if(		NumberConversions.isFinite(v.getX()) &&
+    			NumberConversions.isFinite(v.getY()) &&
+    			NumberConversions.isFinite(v.getZ()))
+    		bullet.setVelocity(v);
+		
+	}
+	
 }

@@ -598,6 +598,11 @@ public class SkywarsLobbyListener implements Listener {
 		
 		InventoryBuilder ib = new InventoryBuilder(TextUtil.format(kk.getInventoryName()), 6 * 9, true);
 		
+		String colorString = " ";
+		
+		if(kk == KitKind.FREE) colorString = "&e";
+		if(kk == KitKind.GENERAL) colorString = "&6";
+		
 		int CURRENT_SLOT = 0;
 		int MAX_SLOT = (6 * 9) - 1;
 		
@@ -614,7 +619,7 @@ public class SkywarsLobbyListener implements Listener {
 							.amount(1)
 							.durability((short) kt.getData())
 							.hideAtributes()
-							.name(TextUtil.format(kt.getName()))
+							.name(TextUtil.format(colorString + kt.getName() + " " + kt.getRarityString()))
 							.lore("")
 							.lore(kt.getLore())
 							.lore("")

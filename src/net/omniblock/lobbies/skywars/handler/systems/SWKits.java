@@ -23,6 +23,7 @@ public class SWKits {
 		KitKind(String inventoryName) {
 
 			this.inventoryName = inventoryName;
+			
 
 		}
 
@@ -33,14 +34,14 @@ public class SWKits {
 
 	public enum SWKitsType {
 
-		CABALLERO(KitKind.GENERAL, "&6Caballero &e✯✯✯", "K0", Material.IRON_SWORD,
-				new KitContents(KitContents.KIT_CABALLERO_CONTENTS), 3, 244, 
+		CABALLERO(KitKind.GENERAL, "Caballero", "&e✯✯✯✯", "K0", Material.IRON_SWORD,
+				new KitContents(KitContents.KIT_CABALLERO_CONTENTS), 4, 354, 
 				new String[] { 
 						"&8- &7Un blindage ligero,",
 						"&7hecho para una mayor!",
 						"&7agilidad en combate."}),
 
-		ATLETA(KitKind.GENERAL, "&6Atleta &e✯✯", "K1", Material.LEATHER_BOOTS,
+		ATLETA(KitKind.GENERAL, "Atleta" ,"&e✯✯", "K1", Material.LEATHER_BOOTS,
 				new KitContents(KitContents.KIT_ATLETA_CONTENTS), 2, 183, 
 				new String[] {
 						"&8- &7El trabajo duro te ofrece",
@@ -48,13 +49,13 @@ public class SWKits {
 						"&7una mayor velocidad",
 						"&7y resistencia física."}),
 
-		ARQUERO(KitKind.GENERAL, "&6Arquero &e✯✯✯", "K2", Material.BOW,
-				new KitContents(KitContents.KIT_ARQUERO_CONTENTS), 3, 244, 
+		ARQUERO(KitKind.GENERAL, "Arquero", "&e✯✯✯✯", "K2", Material.BOW,
+				new KitContents(KitContents.KIT_ARQUERO_CONTENTS), 4, 344, 
 				new String[] {
 						"&8- &7Precisión en sus tiros, capaz de",
 						"&7matar a los enemigos más lejanos!"}),
 
-		MAESTRE(KitKind.GENERAL, "&6Maestre &e✯✯✯✯", "K3", Material.POTION,
+		MAESTRE(KitKind.GENERAL, "Maestre", " &e✯✯✯✯", "K3", Material.POTION,
 				new KitContents(KitContents.KIT_MAESTRE_CONTENTS), 4, 305, 
 				new String[] {
 						"&8- &7Sus conocmientos sobre",
@@ -62,14 +63,14 @@ public class SWKits {
 						"&7de una manera poco ortodoxa,",
 						"&7el conocimiento es poder."}),
 
-		MORBIDO(KitKind.GENERAL, "&6Mórbido &e✯✯", "K4", Material.COOKED_BEEF,
+		MORBIDO(KitKind.GENERAL, "Mórbido", "&e✯✯", "K4", Material.COOKED_BEEF,
 				new KitContents(KitContents.KIT_MORBIDO_CONTENTS), 2, 183, 
 				new String[] {
 						"&8- &7No subestimes su tamaño,",
 						"&7¡puede ser muy rápido y",
 						"&7pillarte desprevenido!"}),
 
-		TALADOR_REAL(KitKind.GENERAL, "&6Talador real &e✯✯✯✯✯", "K5", Material.STONE_AXE,
+		TALADOR_REAL(KitKind.GENERAL, "Talador real ", "&e✯✯✯✯✯", "K5", Material.STONE_AXE,
 				new KitContents(KitContents.KIT_TALADOR_REAL_CONTENTS), 5, 366, 
 				new String[] {
 						"&8- &7Su larga carrera con el",
@@ -77,29 +78,29 @@ public class SWKits {
 						"&7horribles cayos, también le ha",
 						"&7otorgado fuerza y destreza."}),
 
-		INFANTE(KitKind.GENERAL, "&6Infante &e✯✯✯✯✯✯", "K6", Material.GOLD_SWORD,
+		INFANTE(KitKind.GENERAL, "Infante", "&e✯✯✯✯✯✯", "K6", Material.GOLD_SWORD,
 				new KitContents(KitContents.KIT_INFANTE_CONTENTS), 6, 549, 
 				new String[] {
 						"&8- &7Su apellido le doy su",
 						"&7armadura, pero su habilidad",
 						"&7se la cultivo el mismo."}),
 
-		SANADOR(KitKind.GENERAL, "&6Sanador &e✯✯✯✯✯✯✯", "K7", Material.POTION, 16417,
+		SANADOR(KitKind.GENERAL, "Sanador", "&e✯✯✯✯✯✯✯", "K7", Material.POTION, 16417,
 				new KitContents(KitContents.KIT_SANADOR_CONTENTS), 7, 772, 
 				new String[] {
 						"&8- &7Estréchamente conectados",
 						"&7con los maestres, los sanadores",
 						"&7siempre serán valiosos aliados."}),
 
-		ESPIA(KitKind.GENERAL, "&6Espia &e✯✯✯✯✯✯", "K8", Material.POTION, 16462, 
+		ESPIA(KitKind.GENERAL, "Espia", "&e✯✯✯✯✯✯", "K8", Material.POTION, 16462, 
 				new KitContents(KitContents.KIT_ESPIA_CONTENTS), 6, 460, 
 				new String[] {
 						"&8- &7los espías son asesinos",
 						"&7capaces de hacer frente",
 						"&7a cualquier situación."}),
 
-		PIROMANO(KitKind.GENERAL, "&6Pirómano &e✯✯✯✯✯✯✯✯", "K9", Material.FLINT_AND_STEEL,
-				new KitContents(KitContents.KIT_PIROMANO_CONTENTS), 8, 891, 
+		PIROMANO(KitKind.GENERAL, "Pirómano", "&e✯✯✯✯✯✯✯✯", "K9", Material.FLINT_AND_STEEL,
+				new KitContents(KitContents.KIT_PIROMANO_CONTENTS), 8, 1091, 
 				new String[] {
 						"&8- &7Los gritos de sus vícimas",
 						"&7alimentan sus llamas,",
@@ -110,27 +111,27 @@ public class SWKits {
 
 		// KITS GRATUITOS DEL SKYWARS
 
-		ESCUDERO(KitKind.FREE, "&eEscudero", "K10", Material.WOOD_SWORD,
+		ESCUDERO(KitKind.FREE, "Escudero", "K10", Material.WOOD_SWORD,
 				new KitContents(KitContents.KIT_ESCUDERO_CONTENTS), 
 				new String[] {"", ""}),
 
-		LADRON(KitKind.FREE, "&eLadrón", "K11", Material.CHAINMAIL_BOOTS,
+		LADRON(KitKind.FREE, "Ladrón", "K11", Material.CHAINMAIL_BOOTS,
 				new KitContents(KitContents.KIT_LADRON_CONTENTS), 
 				new String[] {""}),
 
-		FLECHERO(KitKind.FREE, "&eFlechero", "K12", Material.BOW, 
+		FLECHERO(KitKind.FREE, "Flechero", "K12", Material.BOW, 
 				new KitContents(KitContents.KIT_FLECHERO_CONTENTS), 
 				new String[] {""}),
 
-		ALQUIMISTA(KitKind.FREE, "&eAlquimista", "K13", Material.POTION,
+		ALQUIMISTA(KitKind.FREE, "Alquimista", "K13", Material.POTION,
 				new KitContents(KitContents.KIT_ALQUIMISTA_CONTENTS), 
 				new String[] {""}),
 
-		ORONDO(KitKind.FREE, "&eOrondo", "K14", Material.PUMPKIN_PIE, 
+		ORONDO(KitKind.FREE, "Orondo", "K14", Material.PUMPKIN_PIE, 
 				new KitContents(KitContents.KIT_ORONDO_CONTENTS), 
 				new String[] {""}),
 		
-		NONE(KitKind.GENERAL, "&6Ninguno &e✯✯✯✯✯✯✯✯✯", "K15", Material.BARRIER, 
+		NONE(KitKind.GENERAL, "Ninguno", "&e✯✯✯✯✯✯✯✯✯", "K15", Material.BARRIER, 
 				new KitContents(KitContents.KIT_NONE_CONTENTS), 1000, 5,
 				new String[] {
 						"&8- &7El increíble, magnifico,",
@@ -140,7 +141,7 @@ public class SWKits {
 
 		private String code;
 		private String name;
-
+		private String rarityString;
 		private String[] lore;
 
 		private int price = 0;
@@ -166,8 +167,25 @@ public class SWKits {
 			this.price = price;
 
 		}
+		
+		SWKitsType(KitKind kind, String name, String rarityString, String code, Material mat, KitContents kitcontents, int rarity, int price,
+				String[] lore) {
 
-		SWKitsType(KitKind kind, String name, String code, Material mat, int data, KitContents kitcontents, int rarity,
+			this.kitContents = kitcontents;
+			this.Kind = kind;
+
+			this.mat = mat;
+
+			this.name = name;
+			this.rarityString = rarityString;
+			this.code = code;
+			this.lore = lore;
+			this.rarity = rarity;
+			this.price = price;
+
+		}
+
+		SWKitsType(KitKind kind, String name, String rarityString, String code, Material mat, int data, KitContents kitcontents, int rarity,
 				int price, String[] lore) {
 
 			this.kitContents = kitcontents;
@@ -175,6 +193,7 @@ public class SWKits {
 
 			this.mat = mat;
 
+			this.rarityString = rarityString;
 			this.name = name;
 			this.code = code;
 			this.lore = lore;
@@ -216,7 +235,11 @@ public class SWKits {
 		public String getName() {
 			return name;
 		}
-
+		
+		public String getRarityString() {
+			return rarityString;
+		}
+		
 		public String getCode() {
 			return code;
 		}
@@ -261,6 +284,7 @@ public class SWKits {
 		private ItemStack mainArticle;
 		private ItemStack secondaryArticle;
 		private ItemStack tertiaryArticle;
+		
 
 		public KitItems(ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots,
 				ItemStack mainArticle, ItemStack secondaryArticle, ItemStack tertiaryArticle) {
@@ -381,7 +405,7 @@ public class SWKits {
 						.lore("&8&l[&7&nCABALLERO&8&l]")
 						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.").build(),
 				/* SLOT 003 */
-				null));
+				new ItemBuilder(Material.SHIELD).amount(1).build()));
 
 		public final static List<KitItems> KIT_ATLETA_CONTENTS = Arrays.asList(new KitItems(null, null, null,
 				new ItemBuilder(Material.LEATHER_BOOTS).amount(1)
@@ -436,7 +460,7 @@ public class SWKits {
 						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.")
 						.lore("&8&l[&7&nARQUERO&8&l]")
 						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.").build(),
-				null));
+				new ItemBuilder(Material.SHIELD).amount(1).build()));
 
 		public final static List<KitItems> KIT_MAESTRE_CONTENTS = Arrays.asList(new KitItems(
 				new ItemBuilder(Material.LEATHER_HELMET).amount(1)
@@ -464,7 +488,7 @@ public class SWKits {
 						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.")
 						.enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).build(),
 				new ItemBuilder(Material.POTION).amount(2)
-						.name("&f�?cido mordiente")
+						.name("&f�?cido mordiente")
 						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.")
 						.lore("&7&oPoción perteneciente a un")
 						.lore("&7&omaestre de la alquimia,")
@@ -782,14 +806,7 @@ public class SWKits {
 						.lore("&8&l[&7&nPIROMANO&8&l]")
 						.potion(PotionEffectType.FIRE_RESISTANCE)
 						.durability((short) 8227).build(),
-				new ItemBuilder(Material.MILK_BUCKET).amount(3)
-						.name("&fVacuna")
-						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.")
-						.lore("&7&oVacuna universal.")
-						.lore("&7&oSe desconocen los")
-						.lore("&7&oefectos secundarios.")
-						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.")
-						.lore("&8&l[&7&nPIROMANO&8&l]").build()));
+				new ItemBuilder(Material.SHIELD).amount(1).build()));
 
 		public final static List<KitItems> KIT_ESCUDERO_CONTENTS = Arrays.asList(new KitItems(
 				new ItemBuilder(Material.LEATHER_HELMET).amount(1)
@@ -882,7 +899,7 @@ public class SWKits {
 						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.")
 						.lore("&8&l[&7&nFLECHERO&8&l]")
 						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.").build(),
-				null));
+				new ItemBuilder(Material.SHIELD).amount(1).build()));
 
 		public final static List<KitItems> KIT_ALQUIMISTA_CONTENTS = Arrays.asList(new KitItems(
 				new ItemBuilder(Material.LEATHER_HELMET).amount(1)
@@ -906,7 +923,7 @@ public class SWKits {
 						.lore("&8&l[&7&nALQUIMISTA&8&l]")
 						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.").build(),
 				new ItemBuilder(Material.POTION).amount(1)
-						.name("&f�?cido corrosivo")
+						.name("&f�?cido corrosivo")
 						.lore("&8&l&n.-..-..-..-..-..-..-..-..-..-..-.")
 						.lore("&7&oPoción perteneciente a un")
 						.lore("&7&omaestre de la alquimia,")

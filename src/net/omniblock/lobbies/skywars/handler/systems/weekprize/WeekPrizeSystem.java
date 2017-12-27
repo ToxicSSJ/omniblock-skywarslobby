@@ -19,12 +19,16 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Dispenser;
@@ -92,6 +96,7 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 	protected Map<TopType, TopPlayer> topPlayers = new HashMap<TopType, TopPlayer>();
 	protected LinkedList<Entry<NPC, TextLine>> topNPCs = new LinkedList<Entry<NPC, TextLine>>();
 	
+	protected List<TNTPrimed> tntPrimed = new ArrayList<TNTPrimed>();
 	protected List<Item> omniCoins = new ArrayList<Item>();
 	
 	@Override
@@ -126,10 +131,12 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 			
 			e.setCancelled(true);
 			
-			e.getPlayer().sendMessage(TextUtil.format("&b¡Has encontrado una OmniCoin! &a&l+&a1 ⛃"));
+			e.getPlayer().sendMessage(TextUtil.format(
+					e.getItem().getItemStack().getType() == Material.EMERALD ?
+					"&b¡Has encontrado una OmniCoin! &a&l+&a1 ⛃" : "&b¡Has encontrado un bloque de OmniCoins! &a&l+&a10 ⛃"));
 			e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_ITEM_PICKUP, 1, 1);
 			
-			BankBase.addMoney(e.getPlayer(), 1);
+			BankBase.addMoney(e.getPlayer(), e.getItem().getItemStack().getType() == Material.EMERALD ? 1 : 10);
 			BankBase.addExp(e.getPlayer(), 10);
 			
 			omniCoins.remove(e.getItem());
@@ -138,6 +145,32 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 			
 		}
 		
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onExplosion(ExplosionPrimeEvent e) {
+
+		if (e.getEntity() instanceof TNTPrimed) {
+
+			e.setCancelled(true);
+
+			TNTPrimed tnt = (TNTPrimed) e.getEntity();
+			
+			tnt.getWorld().playSound(tnt.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 15, 10);
+			ParticleEffect.CLOUD.display(1, 1, 1, 1, 30, tnt.getLocation().add(.5, 0, .5), 200);
+
+			for(int i = 0; i < 2; i++) {
+				
+				Item item = tnt.getWorld().dropItem(tnt.getLocation(), new ItemBuilder(Material.EMERALD_BLOCK).amount(1).name(UUID.randomUUID().toString().substring(0, 5)).build());
+				bounceEntity(item);
+				
+				omniCoins.add(item);
+				continue;
+				
+			}
+			
+		}
+
 	}
 	
 	private void updateTop(){
@@ -250,6 +283,7 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 					List<Block> dispensers = Lists.newArrayList();
 					List<Location> locs = Lists.newArrayList();
 					List<Firework> firework = Lists.newArrayList();
+					List<ArmorStand> stands = Lists.newArrayList();
 					
 					Bukkit.getOnlinePlayers().forEach(p -> player.addPlayer(p));
 					
@@ -466,7 +500,7 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 									LineEffect ef = new LineEffect(GeneralHandler.getEffectLibManager());
 									ef.visibleRange = 300;
 									ef.particle = ParticleEffect.FIREWORKS_SPARK;
-									ef.iterations = 3;
+									ef.iterations = 1;
 									ef.speed = 2;
 									ef.setLocation(l);
 									ef.setTargetLocation(secondLoc);
@@ -478,7 +512,7 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 							
 							if(cacheRound == 16) {
 								
-								effect.particle = ParticleEffect.FIREWORKS_SPARK;
+								effect.particle = ParticleEffect.FLAME;
 								effect.text = "¡PREMIOS REPARTIDOS!";
 								effect.start();
 								
@@ -492,7 +526,107 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 								
 							}
 							
-							if(cacheRound == 48 && phase == 6) {
+							if(cacheRound == 18) {
+								
+								for(Block dispenser : dispensers) {
+									
+									Block blocktnt = dispenser.getRelative(BlockFace.WEST);
+									TNTPrimed tnt = (TNTPrimed) blocktnt.getWorld().spawnEntity(blocktnt.getLocation(), EntityType.PRIMED_TNT);
+									
+									blocktnt.getWorld().playSound(blocktnt.getLocation(), Sound.BLOCK_DISPENSER_DISPENSE, 5, -5);
+									blocktnt.getWorld().playSound(blocktnt.getLocation(), Sound.ENTITY_TNT_PRIMED, 5, -5);
+									
+									tnt.setFireTicks(20 * 3);
+									
+								}
+								
+							}
+							
+							if(cacheRound == 24) {
+								
+								for(Location loc : locs)
+									loc.getBlock().setType(Material.AIR);
+								
+								for(Block dispenser : dispensers)
+									dispenser.setType(Material.AIR);
+								
+								for(Location loc : locs)
+									stands.add((ArmorStand) effect.getLocation().getWorld().spawnEntity(loc, EntityType.ARMOR_STAND));
+								
+								for(ArmorStand stand : stands) {
+									
+									Location newloc = stand.getLocation();
+									newloc.setYaw(90);
+									newloc.setPitch(1);
+									
+									stand.teleport(newloc);
+									
+									newloc.getWorld().playSound(newloc, Sound.ENTITY_HORSE_SADDLE, 10, -5);
+									ParticleEffect.DRIP_LAVA.display(1, 1, 1, 1, 10, newloc.clone(), 200);
+									
+								}
+								
+							}
+							
+							if(cacheRound == 26)
+								for(ArmorStand stand : stands)
+									stand.getEquipment().setBoots(new ItemBuilder(Material.LEATHER_BOOTS).amount(1).color(Color.BLACK).build());
+							
+							if(cacheRound == 27)
+								for(ArmorStand stand : stands)
+									stand.getEquipment().setLeggings(new ItemBuilder(Material.LEATHER_LEGGINGS).amount(1).color(Color.BLACK).build());
+							
+							if(cacheRound == 28)
+								for(ArmorStand stand : stands)
+									stand.getEquipment().setChestplate(new ItemBuilder(Material.LEATHER_CHESTPLATE).amount(1).color(Color.BLACK).build());
+							
+							if(cacheRound == 29)
+								effect.getLocation().getWorld().playSound(effect.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 15, -2);
+							
+							if(cacheRound == 30) {
+								
+								ArmorStand stand = stands.get(2);
+								Location loc = stand.getLocation();
+								
+								stand.getEquipment().setHelmet(new ItemBuilder(Material.STAINED_CLAY).durability((short) 9).amount(1).build());
+								
+								loc.getWorld().playSound(loc, Sound.ITEM_ARMOR_EQUIP_DIAMOND, 10, 10);
+								loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_PLING, 10, 10);
+								ParticleEffect.LAVA.display(1, 1, 1, 1, 15, stand.getEyeLocation().clone(), 200);
+								
+							}
+							
+							if(cacheRound == 31) {
+								
+								ArmorStand stand = stands.get(1);
+								Location loc = stand.getLocation();
+								
+								stand.getEquipment().setHelmet(new ItemBuilder(Material.STAINED_CLAY).durability((short) 5).amount(1).build());
+								
+								loc.getWorld().playSound(loc, Sound.ITEM_ARMOR_EQUIP_DIAMOND, 10, 5);
+								loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_PLING, 10, 5);
+								ParticleEffect.WATER_DROP.display(1, 1, 1, 1, 15, stand.getEyeLocation().clone(), 200);
+								
+							}
+							
+							if(cacheRound == 32) {
+								
+								ArmorStand stand = stands.get(0);
+								Location loc = stand.getLocation();
+								
+								stand.getEquipment().setHelmet(new ItemBuilder(Material.STAINED_CLAY).durability((short) 11).amount(1).build());
+								
+								loc.getWorld().playSound(loc, Sound.ITEM_ARMOR_EQUIP_DIAMOND, 10, -5);
+								loc.getWorld().playSound(loc, Sound.BLOCK_NOTE_PLING, 10, -5);
+								ParticleEffect.SPELL_WITCH.display(1, 1, 1, 1, 15, stand.getEyeLocation().clone(), 200);
+								
+							}
+							
+							if(cacheRound == 34)
+								for(ArmorStand stand : stands)
+									RandomFirework.spawnRandomFirework(stand.getLocation());
+							
+							if(cacheRound == 35 && phase == 6) {
 								
 								this.cancel();
 								
@@ -502,6 +636,10 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 									b.getRelative(BlockFace.DOWN).setType(Material.AIR);
 									b.setType(Material.AIR);
 									b.getWorld().strikeLightningEffect(b.getLocation());
+								}
+								
+								for(ArmorStand stand : stands) {
+									stand.remove();
 								}
 								
 								effect.getLocation().getWorld().playSound(effect.getLocation(), Sound.ENTITY_LIGHTNING_IMPACT, 5, 5);
@@ -680,6 +818,16 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
     			NumberConversions.isFinite(v.getZ()))
     		bullet.setVelocity(v);
 		
+	}
+	
+	public void bounceEntity(Entity entity) {
+
+	    float x = (float) - 1 + (float)(Math.random() * ((1 - -1) + 1));
+	    float y = (float) 0.5;
+	    float z = (float) - 0.3 + (float)(Math.random() * ((0.3 - -0.3) + 1));
+
+	    entity.setVelocity(new Vector(x, y, z));
+	    
 	}
 	
 }

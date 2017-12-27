@@ -115,6 +115,38 @@ public class SkywarsBase {
 		
 	}
 	
+	public static void addWeekPrizePoints(Player player, int points) {
+		
+		MakeSQLUpdate msu = new MakeSQLUpdate(TableType.TOP_STATS_WEEKPRIZE_SKYWARS, TableOperation.UPDATE);
+		
+		msu.whereOperation("p_id", Resolver.getNetworkID(player));
+		msu.rowOperation("p_points", getWeekPrizePoints(player) + points);
+		
+		try {
+			msu.execute();
+		} catch (IllegalArgumentException | SQLException e) {}
+		return;
+		
+	}
+	
+	public static int getWeekPrizePoints(Player player) {
+		
+		try {
+			
+			SQLResultSet query = new MakeSQLQuery(TableType.TOP_STATS_WEEKPRIZE_SKYWARS)
+					.select("p_points")
+					.where("p_id", Resolver.getNetworkID(player))
+					.execute();
+			
+			while(query.next())
+				return query.get("p_points");
+			
+		} catch (SQLException e) {}
+		
+		return 0;
+		
+	}
+	
 	public static void saveAccount(Player player) {
 		
 		AccountInfo ai = new AccountInfo(getStats(player),
@@ -590,6 +622,16 @@ public class SkywarsBase {
 		DEATH_EFFECT,
 		
 		;
+		
+	}
+	
+	public static enum StatType {
+		
+		KILLS,
+		ASSISTENCES,
+		GAMES,
+		WINS,
+		AVERAGE;
 		
 	}
 	

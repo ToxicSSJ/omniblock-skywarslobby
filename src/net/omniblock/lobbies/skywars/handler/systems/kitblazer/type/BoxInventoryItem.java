@@ -66,7 +66,7 @@ public enum BoxInventoryItem {
 
 			};
 
-					InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&4&lKit Blazer!"), 5 * 9, true);
+					InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&4&l¡Kit Blazer!"), 5 * 9, true);
 
 					ib.addItem(new ItemBuilder(Material.BARRIER).name(TextUtil.format("&4Cancelar")).build(), 40,
 							new Action() {
@@ -77,7 +77,7 @@ public enum BoxInventoryItem {
 									player.closeInventory();
 									player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 									player.sendMessage(TextUtil.format(
-											" &e(!) &7Cancelaste la preparación del &4Kit Blazer&7, puedes intentarlo de nuevo!"));
+											"&7Cancelaste la preparación del &4Kit Blazer&7, ¡puedes intentarlo de nuevo!"));
 
 								}
 							});
@@ -176,7 +176,7 @@ public enum BoxInventoryItem {
 									player.closeInventory();
 									player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
 									player.sendMessage(TextUtil.format(
-											" &e(!) &7Cancelaste la preparación del &4Kit Blazer&7, puedes intentarlo de nuevo!"));
+											"&7Cancelaste la preparación del &4Kit Blazer&7, ¡puedes intentarlo de nuevo!"));
 
 								}
 							});

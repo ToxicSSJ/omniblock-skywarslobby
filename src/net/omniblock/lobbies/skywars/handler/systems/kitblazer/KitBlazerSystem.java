@@ -2,6 +2,7 @@ package net.omniblock.lobbies.skywars.handler.systems.kitblazer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Color;
@@ -15,11 +16,13 @@ import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Guardian;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -66,6 +69,8 @@ public class KitBlazerSystem implements LobbySystem {
 
 	private BukkitTask coanimtask;
 	private BukkitTask task;
+
+	private List<Item> kitBlazerItems = new ArrayList<Item>();
 
 	protected SkywarsLobby lobby;
 
@@ -213,7 +218,7 @@ public class KitBlazerSystem implements LobbySystem {
 			@Override
 			public void execute(NPC npc, Player player) {
 
-				InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&4&lKit Blazer!"), 5 * 9, true);
+				InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&4&l¡Kit Blazer!"), 5 * 9, true);
 
 				new BukkitRunnable() {
 
@@ -280,10 +285,8 @@ public class KitBlazerSystem implements LobbySystem {
 		if (use) {
 
 			player.closeInventory();
-			player.sendMessage(TextUtil.format(" &e(!) &4Kit Blazer &7ya esta preparando un kit."));
+			player.sendMessage(TextUtil.format("&4Kit Blazer &7ya esta preparando un kit."));
 			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
-
-			System.out.println("ANIMACION STOP");
 
 			return;
 
@@ -297,10 +300,12 @@ public class KitBlazerSystem implements LobbySystem {
 
 			boolean haskits = ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), kt.getCode());
 
-			if (kt.getKind() != kk) continue;
+			if (kt.getKind() != kk)
+				continue;
 			if (haskits)
-			continue;
-			if (!haskits) getKits.add(kt);
+				continue;
+			if (!haskits)
+				getKits.add(kt);
 
 		}
 
@@ -308,17 +313,19 @@ public class KitBlazerSystem implements LobbySystem {
 			return;
 
 		if (getKits.size() <= 0) {
-			
-			player.sendMessage(TextUtil.format(" &e(!) &7Lo sentimos, ya no quedan Kits disponibles. &a¡Ya los tienes todos!"));
+
+			player.sendMessage(
+					TextUtil.format("&7Lo sentimos, ya no quedan Kits disponibles. &a¡Ya los tienes todos!"));
 			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
-		
+
 			use = false;
-		
+
 			return;
-		
+
 		}
 
 		task.cancel();
+		blaze.setName(TextUtil.format("&c&lPREPARANDO KIT"));
 
 		new BukkitRunnable() {
 
@@ -333,11 +340,9 @@ public class KitBlazerSystem implements LobbySystem {
 				}
 
 				guardianShoot(beama.getEntity(), blaze.getEntity());
+				dropItems();
 				guardianShoot(beamb.getEntity(), blaze.getEntity());
-
-				blaze.despawn();
-				blaze.spawn(block.getLocation().clone().add(0.5, 1, 0.5));
-				blaze.setName(TextUtil.format("&c&lPREPARANDO KIT"));
+				dropItems();
 
 				start++;
 
@@ -359,55 +364,16 @@ public class KitBlazerSystem implements LobbySystem {
 					beama.despawn();
 					beamb.despawn();
 					blaze.despawn();
+					elevator.setType(Material.BARRIER);
+					blaze.spawn(block.getLocation().clone().add(0.5, 2, 0.5));
 
 					SWKitsType kit = getKits.get(NumberUtil.getRandomInt(0, getKits.size() - 1));
 
 					SkywarsBase.addItem(player, kit.getCode());
 
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_POWDER).amount(1).build());
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_POWDER).amount(1).build());
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_POWDER).amount(1).build());
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_POWDER).amount(1).build());
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_POWDER).amount(1).build());
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
-					block.getWorld().dropItemNaturally(
-							block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6,
-									NumberUtil.getRandomInt(-5, 5)),
-							new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
-
 					new BukkitRunnable() {
 
-						Location l = block.getLocation().clone().add(0, 5, 0);
+						Location l = block.getLocation().clone().add(0, 7, 0);
 
 						@Override
 						public void run() {
@@ -431,8 +397,10 @@ public class KitBlazerSystem implements LobbySystem {
 										ef.setLocation(block.getLocation());
 										ef.start();
 
+										blaze.despawn();
+										elevator.setType(Material.AIR);
 										block.getLocation().getWorld().playSound(block.getLocation(),
-												Sound.BLOCK_ANVIL_USE, 1, -1);
+												Sound.BLOCK_ANVIL_USE, 2, -2);
 
 										new BukkitRunnable() {
 
@@ -474,7 +442,7 @@ public class KitBlazerSystem implements LobbySystem {
 														eff.setLocation(seconlocation);
 
 														eff.particle = ParticleEffect.FIREWORKS_SPARK;
-														eff.text = "" + kit.getName() + "!";
+														eff.text = "¡ " + kit.getName() + " !";
 														eff.visibleRange = 500;
 														effect.autoOrient = true;
 														eff.period = 5;
@@ -570,7 +538,7 @@ public class KitBlazerSystem implements LobbySystem {
 
 									}
 
-								}.runTaskLater(OmniLobbies.getInstance(), 10L);
+								}.runTaskLater(OmniLobbies.getInstance(), 12L);
 
 							}
 						}
@@ -588,7 +556,7 @@ public class KitBlazerSystem implements LobbySystem {
 		if (use) {
 
 			player.closeInventory();
-			player.sendMessage(TextUtil.format(" &e(!) &4Kit Blazer &7ya esta preparando un kit."));
+			player.sendMessage(TextUtil.format("&4Kit Blazer &7ya esta preparando un kit."));
 			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
 
 			return;
@@ -618,7 +586,7 @@ public class KitBlazerSystem implements LobbySystem {
 		if (getAllKits.size() <= 0) {
 
 			player.sendMessage(
-					TextUtil.format(" &e(!) &7Lo sentimos, ya no quedan Kits disponibles. &a¡Ya los tienes todos!"));
+					TextUtil.format("&7Lo sentimos, ya no quedan Kits disponibles. &a¡Ya los tienes todos!"));
 			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
 
 			use = false;
@@ -631,33 +599,7 @@ public class KitBlazerSystem implements LobbySystem {
 		BankBase.setMoney(player, BankBase.getMoney(player) - surpriseBoxPrice);
 		SkywarsBase.addItem(player, kit.getCode());
 
-		block.getWorld().dropItemNaturally(
-				block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6, NumberUtil.getRandomInt(-5, 5)),
-				new ItemBuilder(Material.BLAZE_POWDER).amount(1).build());
-		block.getWorld().dropItemNaturally(
-				block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6, NumberUtil.getRandomInt(-5, 5)),
-				new ItemBuilder(Material.BLAZE_POWDER).amount(1).build());
-		block.getWorld().dropItemNaturally(
-				block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6, NumberUtil.getRandomInt(-5, 5)),
-				new ItemBuilder(Material.BLAZE_POWDER).amount(1).build());
-		block.getWorld().dropItemNaturally(
-				block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6, NumberUtil.getRandomInt(-5, 5)),
-				new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
-		block.getWorld().dropItemNaturally(
-				block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6, NumberUtil.getRandomInt(-5, 5)),
-				new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
-		block.getWorld().dropItemNaturally(
-				block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6, NumberUtil.getRandomInt(-5, 5)),
-				new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
-		block.getWorld().dropItemNaturally(
-				block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6, NumberUtil.getRandomInt(-5, 5)),
-				new ItemBuilder(kit.getMaterial()).amount(1).build());
-		block.getWorld().dropItemNaturally(
-				block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6, NumberUtil.getRandomInt(-5, 5)),
-				new ItemBuilder(kit.getMaterial()).amount(1).build());
-		block.getWorld().dropItemNaturally(
-				block.getLocation().clone().add(NumberUtil.getRandomInt(-5, 5), 6, NumberUtil.getRandomInt(-5, 5)),
-				new ItemBuilder(kit.getMaterial()).amount(1).build());
+		dropItems();
 
 		player.sendMessage("");
 		player.sendMessage(TextUtil.format("&r&b&l&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"));
@@ -690,15 +632,31 @@ public class KitBlazerSystem implements LobbySystem {
 			ef.setLocation(guardian.getLocation());
 			ef.setTargetLocation(affected.getEyeLocation());
 			ef.start();
-
-			affected.setVelocity(entity.getLocation().getDirection().multiply(0.4));
 		}
 
 	}
 
-	public static void fill(InventoryBuilder ib, ItemStack stack, SlotIntegers rowintegers) {
+	private void fill(InventoryBuilder ib, ItemStack stack, SlotIntegers rowintegers) {
 		for (int i : rowintegers.getIntegers()) {
 			ib.addItem(stack, i);
 		}
+	}
+
+	private void dropItems() {
+
+		Item item = block.getWorld().dropItem(block.getLocation(),
+				new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
+		bounceEntity(item);
+
+	}
+
+	public void bounceEntity(Entity entity) {
+
+		float x = (float) -1 + (float) (Math.random() * ((1 - -1) + 1));
+		float y = (float) 0.5;
+		float z = (float) -0.3 + (float) (Math.random() * ((0.3 - -0.3) + 1));
+
+		entity.setVelocity(new Vector(x, y, z));
+
 	}
 }

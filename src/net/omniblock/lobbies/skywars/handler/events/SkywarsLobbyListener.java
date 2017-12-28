@@ -98,7 +98,7 @@ public class SkywarsLobbyListener implements Listener {
 			});
 			
 			ib.addItem(new ItemBuilder(Material.IRON_SWORD).amount(1)
-					.name(TextUtil.format("&bEstad�sticas"))
+					.name(TextUtil.format("&bEstadísticas"))
 					.lore("")
 					.lore(TextUtil.format("&8&m-&r &7Tus marcas y estadísticas"))
 					.lore(TextUtil.format("&7más recientes son:"))
@@ -110,12 +110,11 @@ public class SkywarsLobbyListener implements Listener {
 					.lore(TextUtil.format(" &8&m+&r &7Promedio: &9&l" + SkywarsBase.getAverage(SkywarsBase.getStats(e.getPlayer())))).build(), 13);
 			
 			ib.addItem(new ItemBuilder(Material.EMPTY_MAP).amount(1)
-					.name(TextUtil.format("&8&lRanking (Pocisi�n)"))
+					.name(TextUtil.format("&8&lPremio Semanal (Posición)"))
 					.lore("")
-					.lore(TextUtil.format("&8&m-&r &7Mira tu posición en los"))
-					.lore(TextUtil.format("&7diferentes marcadores"))
-					.lore(TextUtil.format("&7marcadores del servidor."))
-					.lore(TextUtil.format("&7Semanal es: &a&l#" + SkywarsBase.getWeekPrizePosition(e.getPlayer()))).build(), 15);
+					.lore(TextUtil.format("&8&m-&r &7Mira tu posición en el"))
+					.lore(TextUtil.format("&7premio semanal de Skywars."))
+					.lore(TextUtil.format("&7Tu posición actual es: &a&l#" + SkywarsBase.getWeekPrizePosition(e.getPlayer()))).build(), 15);
 			
 			ib.addItem(new ItemBuilder(Material.SKULL_ITEM).amount(1)
 					.durability((short) 3)
@@ -123,7 +122,7 @@ public class SkywarsLobbyListener implements Listener {
 					.name(TextUtil.format("&9Idiomas &c&l(Proximamente)"))
 					.lore("")
 					.lore(TextUtil.format("&8&m-&r &7Cambia el idioma de todos los"))
-					.lore(TextUtil.format("&7textos dirigidos al jugador como t�l.")).build(), 31);
+					.lore(TextUtil.format("&7textos dirigidos al jugador como tál.")).build(), 31);
 			
 			ib.addItem(new ItemBuilder(Material.SKULL_ITEM).amount(1)
 					.durability((short) 3)
@@ -141,7 +140,7 @@ public class SkywarsLobbyListener implements Listener {
 					.lore("")
 					.lore(TextUtil.format("&8&m-&r &7Personaliza la configuración de"))
 					.lore(TextUtil.format("&7tu cuenta. Activa y desactiva"))
-					.lore(TextUtil.format("&7características de tu cuenta segín tu"))
+					.lore(TextUtil.format("&7características de tu cuenta según tu"))
 					.lore(TextUtil.format("&7apetencia o necesidad.")).build(), 29, new Action(){
 
 						@Override
@@ -227,15 +226,17 @@ public class SkywarsLobbyListener implements Listener {
 				if(ib.getBukkitInventory() == null) { cancel(); return; } 
 				if(!ib.getBukkitInventory().getViewers().contains(player)) { cancel(); return; }
 				
-				Material m = types.get(current).getMaterial();
-				int subid = types.get(current).getData();
+				Material m = types.get(current).getIcon().getType();
+				short subid = types.get(current).getIcon().getDurability();
 				
-				ib.addItem(new ItemBuilder(m).durability((short) subid).amount(1)
+				ib.addItem(new ItemBuilder(m)
+						.durability(subid)
+						.amount(1)
 						.name(TextUtil.format("&eJaulas"))
 						.lore("")
 						.lore(TextUtil.format("&8&m-&r &7Revisa, compra y usa las"))
-						.lore(TextUtil.format("&7increibles jaulas que tenemos"))
-						.lore(TextUtil.format("&7preparadas para tá!")).build(), 10, new Action() {
+						.lore(TextUtil.format("&7increíbles jaulas que tenemos"))
+						.lore(TextUtil.format("&7preparadas para tí!")).build(), 10, new Action() {
 
 							@Override
 							public void click(ClickType click, Player player) {
@@ -275,8 +276,8 @@ public class SkywarsLobbyListener implements Listener {
 				.name(TextUtil.format("&6Kits"))
 				.lore("")
 				.lore(TextUtil.format("&8&m-&r &7Compra los increíbles Kits"))
-				.lore(TextUtil.format("&7que más se adapten"))
-				.lore(TextUtil.format("&7a tu estilo de juego!")).build(), 28,
+				.lore(TextUtil.format("&7que más se adapten a tu"))
+				.lore(TextUtil.format("&7estilo de juego!")).build(), 28,
 				
 				new Action() {
 
@@ -290,10 +291,10 @@ public class SkywarsLobbyListener implements Listener {
 		});
 		
 		ib.addItem(new ItemBuilder(Material.COAL_BLOCK).amount(1)
-				.name(TextUtil.format("&c&lProximamente...")).build(), 31);
+				.name(TextUtil.format("&c&lPróximamente...")).build(), 31);
 		
 		ib.addItem(new ItemBuilder(Material.COAL_BLOCK).amount(1)
-				.name(TextUtil.format("&c&lProximamente...")).build(), 34);
+				.name(TextUtil.format("&c&lPróximamente...")).build(), 34);
 		
 		ib.open(player);
 		
@@ -332,10 +333,12 @@ public class SkywarsLobbyListener implements Listener {
 				if(ib.getBukkitInventory() == null) { cancel(); return; } 
 				if(!ib.getBukkitInventory().getViewers().contains(player)) { cancel(); return; }
 				
-				Material m = types.get(current).getMaterial();
-				int subid = types.get(current).getData();
+				Material m = types.get(current).getIcon().getType();
+				short subid = types.get(current).getIcon().getDurability();
 				
-				ib.addItem(new ItemBuilder(m).durability((short) subid).amount(1)
+				ib.addItem(new ItemBuilder(m)
+						.durability(subid)
+						.amount(1)
 						.name(TextUtil.format("&dJaulas de Colores"))
 						.lore("")
 						.lore(TextUtil.format("&8&m-&r &7Las jaulas mas coloridas"))
@@ -448,9 +451,9 @@ public class SkywarsLobbyListener implements Listener {
 					
 					ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), ct.getCode()) ?
 							
-							new ItemBuilder(ct.getMaterial())
+							new ItemBuilder(ct.getIcon().getType())
 							.amount(1)
-							.durability((short) ct.getData())
+							.durability(ct.getIcon().getDurability())
 							.hideAtributes()
 							.name(TextUtil.format(ct.getName()))
 							.lore("")
@@ -471,7 +474,7 @@ public class SkywarsLobbyListener implements Listener {
 							.lore(ct.getLore())
 							.lore("")
 							.lore(TextUtil.format(" &aPrecio: &7" + ct.getPrice()))
-							.lore(TextUtil.format(" &6Animación: &7" + (ct.isAnimation() ? "Si" : "No"))).build(),
+							.lore(TextUtil.format(" &6Animación: &7" + (ct.hasAnimation() ? "Si" : "No"))).build(),
 							
 					CURRENT_SLOT, new Action(){
 

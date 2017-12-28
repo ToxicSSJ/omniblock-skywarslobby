@@ -196,8 +196,20 @@ public class SkywarsBase {
 	public static void setStats(Player player, String stats) {
 		
 		MakeSQLUpdate msu = new MakeSQLUpdate(TableType.TOP_STATS_SKYWARS, TableOperation.UPDATE);
+		String[] split = new String[0];
 		
-		msu.rowOperation("p_stats", stats);
+		if(StringUtils.countMatches(stats, ";") == 4)
+			split = stats.split(";");
+		
+		if(split.length < 5)
+			return;
+		
+		msu.rowOperation("kills", split[0]);
+		msu.rowOperation("assists", split[1]);
+		msu.rowOperation("games", split[2]);
+		msu.rowOperation("wins", split[3]);
+		msu.rowOperation("average", split[4].equalsIgnoreCase("NEW") ? 0.0 : Double.valueOf(split[4]));
+		
 		msu.whereOperation("p_id", Resolver.getNetworkID(player));
 		
 		try {
@@ -537,30 +549,27 @@ public class SkywarsBase {
 			if(averages.contains(";")) {
 				
 				String[] av_array = averages.split(";");
-				double[] co_array = new double[] { };
+				double[] co_array = new double[(av_array.length + 1) > 50 ? 50 : (av_array.length + 1)];
 				
-				if(av_array.length >= 50) {
+				int pos_x = 0;
+				for(String k : av_array) {
 					
-					int pos_x = 0;
-					for(String k : av_array) {
+					try {
 						
-						try {
-							
-							double av = Double.valueOf(k);
-							co_array[pos_x] = av;
-							pos_x++;
-							
-						}catch(Exception e) {
-							return new double[] { 0.0 };
-						}
+						double av = Double.valueOf(k);
+						co_array[pos_x] = av;
+						pos_x++;
+						
+					} catch(Exception e) {
+						
+						e.printStackTrace();
+						return new double[] { 0.0 };
 						
 					}
 					
 				}
 				
-				if(co_array.length >= 50) {
-					return co_array;
-				}
+				return co_array;
 				
 			}
 		}

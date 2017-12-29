@@ -504,12 +504,8 @@ public class SkywarsLobby extends SidedLobby {
 	@Override
 	public void giveItems(Player player) {
 		
-		for(GeneralLobbyItem item : GeneralLobbyItem.values()){
-			
-			player.getInventory().setItem(item.getSlot(), item.getBuilder().build());
-			continue;
-			
-		}
+		for(GeneralLobbyItem item : GeneralLobbyItem.values())
+			item.addItem(player);
 		
 		player.getInventory().setItem(1, SkywarsLobbyItem.PLAYER_PROFILE.getBuilder()
 				.setSkullOwner(player.getName())
@@ -521,10 +517,6 @@ public class SkywarsLobby extends SidedLobby {
 				.build());
 		
 		player.getInventory().setItem(4, SkywarsLobbyItem.SHOP.getBuilder()
-				.hideAtributes()
-				.build());
-		
-		player.getInventory().setItem(7, SkywarsLobbyItem.HIDE_PLAYERS.getBuilder()
 				.hideAtributes()
 				.build());
 		

@@ -35,12 +35,12 @@ public class SWKits {
 
 	public enum SWKitsType {
 
-		CABALLERO(KitKind.GENERAL, "Caballero", "&e✯✯✯✯", "K0", Material.IRON_SWORD,
-				new KitContents(KitContents.KIT_CABALLERO_CONTENTS), 4, 354, 
-				new String[] { 
-						"&8- &7Un blindage ligero,",
-						"&7hecho para una mayor!",
-						"&7agilidad en combate."}),
+		NONE(KitKind.GENERAL, "Ninguno", "&e✯✯✯✯✯✯✯✯✯", "K0", Material.BARRIER, 
+				new KitContents(KitContents.KIT_NONE_CONTENTS), 1000, 5,
+				new String[] {
+						"&8- &7El increíble, magnifico,",
+						"&7Épico y legendario",
+						"&7ultra Kit vacío!"}),
 
 		ATLETA(KitKind.GENERAL, "Atleta" ,"&e✯✯", "K1", Material.LEATHER_BOOTS,
 				new KitContents(KitContents.KIT_ATLETA_CONTENTS), 2, 183, 
@@ -108,36 +108,34 @@ public class SWKits {
 						"&7jugando con fuego",
 						"&7hasta hacerlo una forma",
 						"&7de vida, una religión."}),
+		
+		
+		CABALLERO(KitKind.GENERAL, "Caballero", "&e✯✯✯✯", "K10", Material.IRON_SWORD,
+				new KitContents(KitContents.KIT_CABALLERO_CONTENTS), 4, 354, 
+				new String[] { 
+						"&8- &7Un blindage ligero,",
+						"&7hecho para una mayor!",
+						"&7agilidad en combate."}),
+
 
 
 		// KITS GRATUITOS DEL SKYWARS
 
-		ESCUDERO(KitKind.FREE, "Escudero", "K10", Material.WOOD_SWORD,
-				new KitContents(KitContents.KIT_ESCUDERO_CONTENTS), 
-				new String[] {"", ""}),
+		ESCUDERO(KitKind.FREE, "Escudero", "K11", Material.WOOD_SWORD,
+				new KitContents(KitContents.KIT_ESCUDERO_CONTENTS)),
 
-		LADRON(KitKind.FREE, "Ladrón", "K11", Material.CHAINMAIL_BOOTS,
-				new KitContents(KitContents.KIT_LADRON_CONTENTS), 
-				new String[] {""}),
+		LADRON(KitKind.FREE, "Ladrón", "K12", Material.CHAINMAIL_BOOTS,
+				new KitContents(KitContents.KIT_LADRON_CONTENTS)),
 
-		FLECHERO(KitKind.FREE, "Flechero", "K12", Material.BOW, 
-				new KitContents(KitContents.KIT_FLECHERO_CONTENTS), 
-				new String[] {""}),
+		FLECHERO(KitKind.FREE, "Flechero", "K13", Material.BOW, 
+				new KitContents(KitContents.KIT_FLECHERO_CONTENTS)),
 
-		ALQUIMISTA(KitKind.FREE, "Alquimista", "K13", Material.POTION,
-				new KitContents(KitContents.KIT_ALQUIMISTA_CONTENTS), 
-				new String[] {""}),
+		ALQUIMISTA(KitKind.FREE, "Alquimista", "K14", Material.POTION,
+				new KitContents(KitContents.KIT_ALQUIMISTA_CONTENTS)),
 
-		ORONDO(KitKind.FREE, "Orondo", "K14", Material.PUMPKIN_PIE, 
-				new KitContents(KitContents.KIT_ORONDO_CONTENTS), 
-				new String[] {""}),
+		ORONDO(KitKind.FREE, "Orondo", "K15", Material.PUMPKIN_PIE, 
+				new KitContents(KitContents.KIT_ORONDO_CONTENTS)),
 		
-		NONE(KitKind.GENERAL, "Ninguno", "&e✯✯✯✯✯✯✯✯✯", "K15", Material.BARRIER, 
-				new KitContents(KitContents.KIT_NONE_CONTENTS), 1000, 5,
-				new String[] {
-						"&8- &7El increíble, magnifico,",
-						"&7Épico y legendario",
-						"&7ultra Kit vacío!"}),
 		;
 
 		private String code;
@@ -220,7 +218,7 @@ public class SWKits {
 
 		}
 
-		SWKitsType(KitKind kind, String name, String code, Material mat, KitContents kitcontents, String[] lore) {
+		SWKitsType(KitKind kind, String name, String code, Material mat, KitContents kitcontents) {
 
 			this.kitContents = kitcontents;
 			this.Kind = kind;
@@ -229,7 +227,8 @@ public class SWKits {
 
 			this.name = name;
 			this.code = code;
-			this.lore = lore;
+			this.lore = new String[] {"&8- &7Increíble kit que amplia", 
+									  "&7tus estrategias en el combate."};
 
 		}
 

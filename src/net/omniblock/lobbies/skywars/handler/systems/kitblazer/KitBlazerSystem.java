@@ -20,9 +20,15 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -54,23 +60,26 @@ import net.omniblock.network.library.utils.TextUtil;
 public class KitBlazerSystem implements LobbySystem {
 
 	private Block block;
-	private Block elevator;
 
 	private Block beambasea;
 	private Block beambaseb;
 
+	private Location blazeLoc;
+	private Location beambaseaLoc;
+	private Location beambasebLoc;
+
 	private NPC blaze;
-	private NPC hud;
 
 	private NPC beama;
 	private NPC beamb;
 
+	private Hologram hologram;
+	private TextLine line;
+	
 	private Listener listener;
 
 	private BukkitTask coanimtask;
 	private BukkitTask task;
-
-	private List<Item> kitBlazerItems = new ArrayList<Item>();
 
 	protected SkywarsLobby lobby;
 
@@ -78,19 +87,37 @@ public class KitBlazerSystem implements LobbySystem {
 
 	public String[] textAnimation = new String[] {
 
-			"&9&l>&b&l>> KIT BLAZER <<&9&l<", "&9&l>>&b&l> KIT BLAZER <&9&l<<", "&9&l>>>&b&l KIT BLAZER &9&l<<<",
-			"&b&l>>>&9&l KIT BLAZER &b&l<<<", "&9&l>>>&b&l KIT BLAZER &9&l<<<", "&b&l>>>&9&l KIT BLAZER &b&l<<<",
-			"&9&l>>>&b&l KIT BLAZER &9&l<<<", "&9&l>>&b&l> KIT BLAZER <&9&l<<", "&9&l>&b&l>> KIT BLAZER <<&9&l<",
+			"&9&l>&b&l>> KIT BLAZER <<&9&l<",
+			"&9&l>>&b&l> KIT BLAZER <&9&l<<",
+			"&9&l>>>&b&l KIT BLAZER &9&l<<<",
+			"&b&l>>>&9&l KIT BLAZER &b&l<<<", 
+			"&9&l>>>&b&l KIT BLAZER &9&l<<<", 
+			"&b&l>>>&9&l KIT BLAZER &b&l<<<",
+			"&9&l>>>&b&l KIT BLAZER &9&l<<<", 
+			"&9&l>>&b&l> KIT BLAZER <&9&l<<", 
+			"&9&l>&b&l>> KIT BLAZER <<&9&l<",
 			"&b&l>>> KIT BLAZER <<<",
 
 	};
 
 	public String[] textAnimationWithDeath = new String[] {
 
-			"&b&l 1%", "&b&l 5%", "&b&l 8%", "&b&l 12%", "&b&l 15%", "&b&l 18%", "&b&l 20%", "&b&l 22%", "&b&l 26%",
-			"&b&l 30%", "&b&l 34%", "&b&l 38%", "&b&l 41%", "&b&l 45%", "&b&l 49%", "&b&l 54%", "&b&l 57%", "&b&l 65%",
-			"&b&l 67%", "&b&l 69%", "&b&l 73%", "&b&l 83%", "&b&l 86%", "&b&l 89%", "&b&l 96%", "&b&l 98%", "&b&l 99%",
-			"&4&l 100%" };
+			"&b&l 1%", "&b&l 5%", 
+			"&b&l 8%", "&b&l 12%", 
+			"&b&l 15%", "&b&l 18%", 
+			"&b&l 20%", "&b&l 22%", 
+			"&b&l 26%","&b&l 30%", 
+			"&b&l 34%", "&b&l 38%", 
+			"&b&l 41%", "&b&l 45%",
+			"&b&l 49%","&b&l 54%",
+			"&b&l 57%", "&b&l 65%",
+			"&b&l 67%", "&b&l 69%", 
+			"&b&l 73%", "&b&l 83%", 
+			"&b&l 86%", "&b&l 89%",
+			"&b&l 96%", "&b&l 98%", 
+			"&b&l 99%","&4&l 100%" 
+			
+	};
 
 	@Override
 	public void setup(Lobby lobby) {
@@ -101,13 +128,10 @@ public class KitBlazerSystem implements LobbySystem {
 			KitBlazerHandler.renewSystem(this);
 			block = this.lobby.getLastScan().get("MYSTERY_BOX").get(0).getBlock();
 
-			elevator = block.getRelative(BlockFace.UP);
-
 			beambasea = block.getLocation().clone().add(-2, 0, 7).getBlock();
 			beambaseb = block.getLocation().clone().add(-7, 0, 2).getBlock();
 
 			blaze = CitizensAPI.getNPCRegistry().createNPC(EntityType.BLAZE, TextUtil.format("&b&l>>> KIT BLAZER <<<"));
-			hud = CitizensAPI.getNPCRegistry().createNPC(EntityType.ARMOR_STAND, TextUtil.format(" "));
 
 			beama = CitizensAPI.getNPCRegistry().createNPC(EntityType.GUARDIAN,
 					TextUtil.format("&cMaterializador &7(#1)"));
@@ -118,20 +142,11 @@ public class KitBlazerSystem implements LobbySystem {
 
 			beambasea.setType(Material.COAL_BLOCK);
 			beambaseb.setType(Material.COAL_BLOCK);
+			
+			hologram = HologramsAPI.createHologram(OmniLobbies.getInstance(), block.getLocation().clone().add(0.5, 3.3, 0.5));
+			line =	hologram.appendTextLine(TextUtil.format(" "));
 
-			hud.spawn(block.getLocation().clone().add(0.5, 1.3, 0.5));
-
-			blaze.spawn(block.getLocation().clone().add(0.5, 1, 0.5));
-
-			beama.spawn(beambasea.getLocation().clone().add(0.5, 1.3, 0.5));
-			beamb.spawn(beambaseb.getLocation().clone().add(0.5, 1.3, 0.5));
-
-			ArmorStand stand = (ArmorStand) hud.getEntity();
-			stand.setCustomNameVisible(true);
-			stand.setVisible(false);
-			stand.setCanPickupItems(false);
-			stand.setGravity(false);
-			stand.setBasePlate(false);
+			spawnNPCs();
 
 		}
 
@@ -153,9 +168,6 @@ public class KitBlazerSystem implements LobbySystem {
 		if (block != null)
 			block.setType(Material.AIR);
 
-		if (elevator != null)
-			elevator.setType(Material.AIR);
-
 		if (beambasea != null)
 			beambasea.setType(Material.AIR);
 
@@ -165,10 +177,6 @@ public class KitBlazerSystem implements LobbySystem {
 		if (blaze != null)
 			if (blaze.isSpawned())
 				blaze.destroy();
-
-		if (hud != null)
-			if (hud.isSpawned())
-				hud.destroy();
 
 		if (beama != null)
 			if (beama.isSpawned())
@@ -180,6 +188,30 @@ public class KitBlazerSystem implements LobbySystem {
 
 		if (task != null)
 			task.cancel();
+
+	}
+	
+	private void spawnNPCs() {
+		
+		blazeLoc = block.getLocation().clone().add(0.5, 1, 0.5);
+		
+		blazeLoc.setYaw((float) 47.3);
+		blazeLoc.setPitch((float) 18.2);
+		
+		blaze.spawn(blazeLoc);
+
+		beambaseaLoc = beambasea.getLocation().clone().add(0.5, 1.3, 0.5);
+		beambaseaLoc.setYaw((float) -165.3);
+		beambaseaLoc.setPitch((float) 3.0);
+
+		beambasebLoc = beambaseb.getLocation().clone().add(0.5, 1.3, 0.5);
+		beambasebLoc.setYaw((float) -107.4);
+		beambasebLoc.setPitch((float) 2.1);
+
+		beama.spawn(beambaseaLoc);
+		beamb.spawn(beambasebLoc);
+		
+		line.setText(" ");
 
 	}
 
@@ -340,9 +372,12 @@ public class KitBlazerSystem implements LobbySystem {
 				}
 
 				guardianShoot(beama.getEntity(), blaze.getEntity());
-				dropItems();
 				guardianShoot(beamb.getEntity(), blaze.getEntity());
-				dropItems();
+
+				Item item = block.getWorld().dropItem(block.getLocation(), new ItemBuilder(Material.BLAZE_ROD).amount(1)
+						.name(UUID.randomUUID().toString().substring(0, 5)).build());
+
+				bounceEntity(item);
 
 				start++;
 
@@ -363,9 +398,7 @@ public class KitBlazerSystem implements LobbySystem {
 
 					beama.despawn();
 					beamb.despawn();
-					blaze.despawn();
-					elevator.setType(Material.BARRIER);
-					blaze.spawn(block.getLocation().clone().add(0.5, 2, 0.5));
+					blaze.getEntity().setVelocity(new Vector(0, 0.5, 0));
 
 					SWKitsType kit = getKits.get(NumberUtil.getRandomInt(0, getKits.size() - 1));
 
@@ -398,9 +431,7 @@ public class KitBlazerSystem implements LobbySystem {
 										ef.start();
 
 										blaze.despawn();
-										elevator.setType(Material.AIR);
-										block.getLocation().getWorld().playSound(block.getLocation(),
-												Sound.BLOCK_ANVIL_USE, 2, -2);
+										block.getLocation().getWorld().playSound(block.getLocation(), Sound.BLOCK_ANVIL_USE, 2, -2);
 
 										new BukkitRunnable() {
 
@@ -466,6 +497,8 @@ public class KitBlazerSystem implements LobbySystem {
 														player.sendMessage(TextUtil.format(
 																"&r&b&l&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"));
 														player.sendMessage("");
+														
+														removeDropItems();
 
 														new BukkitRunnable() {
 
@@ -482,10 +515,8 @@ public class KitBlazerSystem implements LobbySystem {
 																	return;
 																}
 
-																hud.setName(
-																		TextUtil.format(textAnimationWithDeath[round]));
-																player.playSound(player.getLocation(),
-																		Sound.BLOCK_LAVA_POP, 2, 2);
+																line.setText(TextUtil.format(textAnimationWithDeath[round]));
+																player.playSound(player.getLocation(), Sound.BLOCK_LAVA_POP, 2, 2);
 
 																round++;
 
@@ -493,13 +524,7 @@ public class KitBlazerSystem implements LobbySystem {
 
 																	cancel();
 
-																	beama.spawn(beambasea.getLocation().clone().add(0.5,
-																			1.3, 0.5));
-																	beamb.spawn(beambaseb.getLocation().clone().add(0.5,
-																			1.3, 0.5));
-																	blaze.spawn(block.getLocation().clone().add(0.5, 1,
-																			0.5));
-																	hud.setName(" ");
+																	spawnNPCs();
 
 																	block.getWorld()
 																			.strikeLightningEffect(block.getLocation());
@@ -539,7 +564,6 @@ public class KitBlazerSystem implements LobbySystem {
 									}
 
 								}.runTaskLater(OmniLobbies.getInstance(), 12L);
-
 							}
 						}
 
@@ -552,66 +576,6 @@ public class KitBlazerSystem implements LobbySystem {
 	}
 
 	public void makeSurpriseBoxAnimation(int surpriseBoxPrice, Player player) {
-
-		if (use) {
-
-			player.closeInventory();
-			player.sendMessage(TextUtil.format("&4Kit Blazer &7ya esta preparando un kit."));
-			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
-
-			return;
-
-		}
-
-		use = true;
-
-		List<SWKitsType> getAllKits = new ArrayList<SWKitsType>();
-
-		for (SWKitsType kt : SWKitsType.values()) {
-
-			boolean haskits = ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), kt.getCode());
-
-			if (kt == SWKitsType.NONE)
-				continue;
-			if (haskits)
-				continue;
-			if (!haskits)
-				getAllKits.add(kt);
-
-		}
-
-		if (!player.isOnline())
-			return;
-
-		if (getAllKits.size() <= 0) {
-
-			player.sendMessage(
-					TextUtil.format("&7Lo sentimos, ya no quedan Kits disponibles. &a¡Ya los tienes todos!"));
-			player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
-
-			use = false;
-
-			return;
-
-		}
-
-		SWKitsType kit = getAllKits.get(NumberUtil.getRandomInt(0, getAllKits.size() - 1));
-		BankBase.setMoney(player, BankBase.getMoney(player) - surpriseBoxPrice);
-		SkywarsBase.addItem(player, kit.getCode());
-
-		dropItems();
-
-		player.sendMessage("");
-		player.sendMessage(TextUtil.format("&r&b&l&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"));
-		player.sendMessage("");
-		player.sendMessage(TextUtil.getCenteredMessage("&r&7&l¡Increíble!", true));
-		player.sendMessage("");
-		player.sendMessage(TextUtil.getCenteredMessage("&r&7&lConseguiste el Kit " + "&e" + kit.getName(), true));
-		player.sendMessage("");
-		player.sendMessage(TextUtil.format("&r&b&l&m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"));
-		player.sendMessage("");
-
-		use = false;
 
 	}
 
@@ -628,7 +592,7 @@ public class KitBlazerSystem implements LobbySystem {
 			ef.particle = ParticleEffect.REDSTONE;
 			ef.color = Color.ORANGE;
 			ef.autoOrient = true;
-			ef.visibleRange = 300;
+			ef.visibleRange = 200;
 			ef.setLocation(guardian.getLocation());
 			ef.setTargetLocation(affected.getEyeLocation());
 			ef.start();
@@ -642,12 +606,16 @@ public class KitBlazerSystem implements LobbySystem {
 		}
 	}
 
-	private void dropItems() {
+	private void removeDropItems() {
 
-		Item item = block.getWorld().dropItem(block.getLocation(),
-				new ItemBuilder(Material.BLAZE_ROD).amount(1).build());
-		bounceEntity(item);
+		List<Entity> entList = block.getWorld().getEntities();
 
+		for (Entity current : entList) {
+			if (current instanceof Item) {
+				
+				current.remove();
+			}
+		}
 	}
 
 	public void bounceEntity(Entity entity) {

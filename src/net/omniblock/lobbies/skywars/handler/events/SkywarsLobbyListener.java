@@ -570,7 +570,7 @@ public class SkywarsLobbyListener implements Listener {
 		});
 		
 		
-		ib.addItem(new ItemBuilder(Material.EMPTY_MAP).name(TextUtil.format("&6Gratuitos!"))
+		ib.addItem(new ItemBuilder(Material.EMPTY_MAP).name(TextUtil.format("&6 Kits Gratuitos!"))
 				.lore("")
 				.lore(TextUtil.format("&8&m-&r &7Obtén los increíbles kits Gratuitos"))
 				.lore(TextUtil.format("&7con nuestro sistema; &c&lKit Blazer!"))

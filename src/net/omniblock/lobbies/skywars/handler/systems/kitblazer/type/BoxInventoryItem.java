@@ -10,7 +10,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.omniblock.lobbies.OmniLobbies;
 import net.omniblock.lobbies.skywars.handler.systems.SWKits.KitKind;
 import net.omniblock.lobbies.skywars.handler.systems.kitblazer.KitBlazerHandler;
-import net.omniblock.network.handlers.base.bases.type.BankBase;
 import net.omniblock.network.library.helpers.ItemBuilder;
 import net.omniblock.network.library.helpers.inventory.InventoryBuilder;
 import net.omniblock.network.library.helpers.inventory.InventoryBuilder.Action;
@@ -40,7 +39,12 @@ public enum BoxInventoryItem {
 
 	KITS_FREE(
 			new ItemBuilder(Material.BLAZE_ROD).amount(1).durability((short) 0).name(TextUtil.format("&eGratuitos"))
-					.lore(TextUtil.format("")).build(),
+				.lore("")	
+				.lore(TextUtil.format("&8&m-&r &7Consigue cualquiera de"))
+				.lore(TextUtil.format("&7estos kits de forma gratuita"))
+				.lore(TextUtil.format("&7y descubre las nuevas"))
+				.lore(TextUtil.format("&7formas de pvp."))
+				.build(),
 
 			new Action() {
 
@@ -76,8 +80,7 @@ public enum BoxInventoryItem {
 
 									player.closeInventory();
 									player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-									player.sendMessage(TextUtil.format(
-											"&7Cancelaste la preparación del &4Kit Blazer&7, ¡puedes intentarlo de nuevo!"));
+									player.sendMessage(TextUtil.format("&7Cancelaste la preparación del &cKit Blazer&7, puedes intentarlo de nuevo"));
 
 								}
 							});
@@ -146,8 +149,14 @@ public enum BoxInventoryItem {
 				}
 			}),
 
-	KIT_SEASONS(new ItemBuilder(Material.BLAZE_POWDER).amount(1)
-			.name(TextUtil.format("&6&lTemporadas &c&lProximamente...")).lore(TextUtil.format("")).build(),
+	KIT_SEASONS(new ItemBuilder(Material.BLAZE_POWDER).amount(1).name(TextUtil.format("&eTemporadas"))
+			.lore("")
+			.lore(TextUtil.format("&8&m-&r &7Consigue tu kit por"))
+			.lore(TextUtil.format("&7temporada, recuerda que"))
+			.lore(TextUtil.format("&7solo habrá uno de ese tipo."))
+			.lore("")
+			.lore(TextUtil.format("&6&l(Proximamente)")).build(),
+			
 			new Action() {
 
 				@Override
@@ -158,9 +167,14 @@ public enum BoxInventoryItem {
 			}),
 
 	SURPRISE_BOX(new ItemBuilder(Material.FIREBALL).amount(1).name(TextUtil.format("&6Caja sorpresa"))
-			.lore(TextUtil.format("")).lore(TextUtil.format("&8&m-&r &7Consigue cualquier Kit"))
-			.lore(TextUtil.format("&7de forma aleatoria.")).lore(TextUtil.format(""))
-			.lore(TextUtil.format("&aPrecio: &7500")).lore(TextUtil.format("")).build(), new Action() {
+			.lore(TextUtil.format(""))
+			.lore(TextUtil.format("&8&m-&r &7Consigue cualquier Kit"))
+			.lore(TextUtil.format("&7de forma aleatoria."))
+			.lore(TextUtil.format(""))
+			.lore(TextUtil.format("&aPrecio: &7500"))
+			.lore(TextUtil.format("")).build(),
+			
+			new Action() {
 
 				@Override
 				public void click(ClickType click, Player player) {
@@ -175,8 +189,7 @@ public enum BoxInventoryItem {
 
 									player.closeInventory();
 									player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-									player.sendMessage(TextUtil.format(
-											"&7Cancelaste la preparación del &4Kit Blazer&7, ¡puedes intentarlo de nuevo!"));
+									player.sendMessage(TextUtil.format("&7Cancelaste la preparación del &4Kit Blazer&7, ¡puedes intentarlo de nuevo!"));
 
 								}
 							});
@@ -190,36 +203,11 @@ public enum BoxInventoryItem {
 					ib.addItem(new ItemBuilder(Material.BLAZE_ROD).amount(1).name(TextUtil.format("&6Caja sorpresa"))
 							.build(), 22);
 
-					new BukkitRunnable() {
-
-						final int surpriseBox = 500;
-						boolean hasmoney = BankBase.getMoney(player) >= surpriseBox;
-
-						@Override
-						public void run() {
-
-							if (ib.getBukkitInventory() == null) {
-								cancel();
-								return;
-							}
-							if (!ib.getBukkitInventory().getViewers().contains(player)) {
-								cancel();
-								return;
-							}
-
-							if (hasmoney) {
-
-								player.closeInventory();
-								player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 5, 5);
-
-								// KitBlazerHandler.getSystem().makeSurpriseBoxAnimation(surpriseBox, player);
-
-							}
-
-						}
-					}.runTaskLater(OmniLobbies.getInstance(), 100L);
-
 					ib.open(player);
+					
+					player.closeInventory();
+					player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+					player.sendMessage(TextUtil.format("&cEsta opción no se encuentra disponible, por el momento."));
 				}
 			}
 

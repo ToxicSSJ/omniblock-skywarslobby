@@ -84,8 +84,8 @@ public class SkywarsLobbyListener implements Listener {
 					.lore("")
 					.lore(TextUtil.format("&8&m-&r &7¡Explora todos los logros"))
 					.lore(TextUtil.format("&7disponibles de los diferentes"))
-					.lore(TextUtil.format("&7juegos de Omniblock,"))
-					.lore(TextUtil.format("&7Manos a la obra!")).build(), 11, new Action() {
+					.lore(TextUtil.format("&7juegos de OmniBlock."))
+					.lore(TextUtil.format("&7¡Manos a la obra!")).build(), 11, new Action() {
 
 						@Override
 						public void click(ClickType click, Player player) {
@@ -110,7 +110,7 @@ public class SkywarsLobbyListener implements Listener {
 					.lore(TextUtil.format(" &8&m+&r &7Promedio: &9&l" + SkywarsBase.getAverage(SkywarsBase.getStats(e.getPlayer())))).build(), 13);
 			
 			ib.addItem(new ItemBuilder(Material.EMPTY_MAP).amount(1)
-					.name(TextUtil.format("&8&lPremio Semanal (Posición)"))
+					.name(TextUtil.format("&8&lRanking semanal"))
 					.lore("")
 					.lore(TextUtil.format("&8&m-&r &7Mira tu posición en el"))
 					.lore(TextUtil.format("&7premio semanal de Skywars."))
@@ -119,7 +119,7 @@ public class SkywarsLobbyListener implements Listener {
 			ib.addItem(new ItemBuilder(Material.SKULL_ITEM).amount(1)
 					.durability((short) 3)
 					.setSkullOwner("Seska_Rotan")
-					.name(TextUtil.format("&9Idiomas &c&l(Proximamente)"))
+					.name(TextUtil.format("&9Idiomas &c&l(PRÓXIMAMENTE)"))
 					.lore("")
 					.lore(TextUtil.format("&8&m-&r &7Cambia el idioma de todos los"))
 					.lore(TextUtil.format("&7textos dirigidos al jugador como tál.")).build(), 31);
@@ -127,7 +127,7 @@ public class SkywarsLobbyListener implements Listener {
 			ib.addItem(new ItemBuilder(Material.SKULL_ITEM).amount(1)
 					.durability((short) 3)
 					.setSkullOwner(e.getPlayer().getName())
-					.name(TextUtil.format("&aEstadísticas Generales"))
+					.name(TextUtil.format("&aEstadísticas generales"))
 					.lore("")
 					.lore(TextUtil.format("&8IGN: &7" + e.getPlayer().getName()))
 					.lore(TextUtil.format("&8OmniCoins: &7" + BankBase.getMoney(e.getPlayer())))
@@ -232,11 +232,12 @@ public class SkywarsLobbyListener implements Listener {
 				ib.addItem(new ItemBuilder(m)
 						.durability(subid)
 						.amount(1)
-						.name(TextUtil.format("&eJaulas"))
+						.name(TextUtil.format("&eCápsulas"))
 						.lore("")
-						.lore(TextUtil.format("&8&m-&r &7Revisa, compra y usa las"))
-						.lore(TextUtil.format("&7increíbles jaulas que tenemos"))
-						.lore(TextUtil.format("&7preparadas para tí!")).build(), 10, new Action() {
+						.lore(TextUtil.format("&8&m-&r &7Usa las diferentes cápsulas"))
+						.lore(TextUtil.format("&7que tenemos para tí."))
+						.lore(TextUtil.format("&7¡Comienza la partida de un modo"))
+						.lore(TextUtil.format("&7único y muy personalizable!")).build(), 10, new Action() {
 
 							@Override
 							public void click(ClickType click, Player player) {
@@ -255,29 +256,31 @@ public class SkywarsLobbyListener implements Listener {
 		}.runTaskTimer(OmniLobbies.getInstance(), 0L, 10L);
 		
 		ib.addItem(new ItemBuilder(Material.BONE).amount(1)
-				.name(TextUtil.format("&8Animación de Muerte"))
+				.name(TextUtil.format("&8Animación de eliminación"))
 				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Elige animaciones de"))
-				.lore(TextUtil.format("&7muerte que serán reproducidas"))
-				.lore(TextUtil.format("&7cada vez que mueras!"))
+				.lore(TextUtil.format("&8&m-&r &7Escoje la animación de"))
+				.lore(TextUtil.format("&7muerte que más te guste, esta"))
+				.lore(TextUtil.format("&7será reproducida cuando seas"))
+				.lore(TextUtil.format("&7eliminado en una partida."))
 				.lore("")
-				.lore(TextUtil.format("   &6&l(Proximamente) ")).build(), 13);
+				.lore(TextUtil.format("   &6&l(Próximamente) ")).build(), 13);
 		
 		ib.addItem(new ItemBuilder(Material.BOW).amount(1)
-				.name(TextUtil.format("&8Efectos de Arco"))
+				.name(TextUtil.format("&8Animación de disparo"))
 				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Al lanzar flechas, estas"))
-				.lore(TextUtil.format("&7generarán un rastro de"))
-				.lore(TextUtil.format("&7partículas en el aire!"))
+				.lore(TextUtil.format("&8&m-&r &7Elige las partículas que"))
+				.lore(TextUtil.format("&7más te gusten."))
+				.lore(TextUtil.format("&7Estas aparecerán detrás"))
+				.lore(TextUtil.format("&7de las flechas que dispares."))
 				.lore("")
-				.lore(TextUtil.format("   &6&l(Proximamente) ")).build(), 16);
+				.lore(TextUtil.format("   &6&l(Próximamente) ")).build(), 16);
 		
 		ib.addItem(new ItemBuilder(Material.getMaterial(439)).amount(1)
 				.name(TextUtil.format("&6Kits"))
 				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Compra los increíbles Kits"))
-				.lore(TextUtil.format("&7que más se adapten a tu"))
-				.lore(TextUtil.format("&7estilo de juego!")).build(), 28,
+				.lore(TextUtil.format("&8&m-&r &7Selecciona el kit que más"))
+				.lore(TextUtil.format("&7se adapte a tu estilo de juego,"))
+				.lore(TextUtil.format("&7este será una gran ventaja para tí.")).build(), 28,
 				
 				new Action() {
 
@@ -339,11 +342,11 @@ public class SkywarsLobbyListener implements Listener {
 				ib.addItem(new ItemBuilder(m)
 						.durability(subid)
 						.amount(1)
-						.name(TextUtil.format("&dJaulas de Colores"))
+						.name(TextUtil.format("&dColores"))
 						.lore("")
-						.lore(TextUtil.format("&8&m-&r &7Las jaulas mas coloridas"))
-						.lore(TextUtil.format("&7de todo OmniNetwork disponibles"))
-						.lore(TextUtil.format("&7para cualquier jugador!")).build(), 10, new Action() {
+						.lore(TextUtil.format("&8&m-&r &7¡Para empezar la partida de"))
+						.lore(TextUtil.format("&7la forma más colorida posible!"))
+						.lore(TextUtil.format("&7Disponibles para cualquier jugador.")).build(), 10, new Action() {
 
 							@Override
 							public void click(ClickType click, Player player) {
@@ -362,12 +365,13 @@ public class SkywarsLobbyListener implements Listener {
 		}.runTaskTimer(OmniLobbies.getInstance(), 0L, 10L);
 		
 		ib.addItem(new ItemBuilder(Material.REDSTONE).amount(1)
-				.name(TextUtil.format("&6Jaulas de Temporadas"))
+				.name(TextUtil.format("&6Temporada"))
 				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Estas jaulas solo estarán"))
-				.lore(TextUtil.format("&7a la venta en temporadas especiales"))
-				.lore(TextUtil.format("&7a precios muy distintos y pueden"))
-				.lore(TextUtil.format("&7ser adquiridas por cualquier jugador!")).build(), 12, new Action(){
+				.lore(TextUtil.format("&8&m-&r &7Estás cápsulas solo estarán"))
+				.lore(TextUtil.format("&7disponibles en fechas especiales."))
+				.lore(TextUtil.format("&7Date prisa en adquirirlas."))
+				.lore(TextUtil.format("&7¡Posiblemente no vuelvas a tener"))
+				.lore(TextUtil.format("&7otra oportunidad!")).build(), 12, new Action(){
 
 					@Override
 					public void click(ClickType click, Player player) {
@@ -380,13 +384,10 @@ public class SkywarsLobbyListener implements Listener {
 		});
 		
 		ib.addItem(new ItemBuilder(Material.getMaterial(385)).amount(1)
-				.name(TextUtil.format("&4Jaulas Customizadas"))
+				.name(TextUtil.format("&4Premio"))
 				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Las jaulas customizadas"))
-				.lore(TextUtil.format("&7son desarrolladas para ocasiones"))
-				.lore(TextUtil.format("&7especieles y solo pueden ser"))
-				.lore(TextUtil.format("&7ganadas por medio de eventos o"))
-				.lore(TextUtil.format("&7el premio semanal!")).build(), 14, new Action(){
+				.lore(TextUtil.format("&8&m-&r &7Sólo podrás conseguirlas en"))
+				.lore(TextUtil.format("&7eventos y premios semanales.")).build(), 14, new Action(){
 
 					@Override
 					public void click(ClickType click, Player player) {
@@ -399,12 +400,14 @@ public class SkywarsLobbyListener implements Listener {
 		});
 		
 		ib.addItem(new ItemBuilder(Material.DIAMOND).amount(1)
-				.name(TextUtil.format("&eJaulas VIP"))
+				.name(TextUtil.format("&eRango"))
 				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7¡Las jaulas vips son jaulas"))
-				.lore(TextUtil.format("&7unicamente accesibles por los jugadores"))
-				.lore(TextUtil.format("&7con un rango &6&lVIP &7y poseen"))
-				.lore(TextUtil.format("&7animaciones unicas y muy visuales!")).build(), 16, new Action(){
+				.lore(TextUtil.format("&8&m-&r &7Únicamente accesibles para los"))
+				.lore(TextUtil.format("&7jugadores con rango Golem y Titán."))
+				.lore(TextUtil.format("&7Estas cápsulas cambian de forma"))
+				.lore(TextUtil.format("&7al poseer animaciones únicas."))
+				.lore(TextUtil.format("&7Teniendo una variante diferente"))
+				.lore(TextUtil.format("de la cápsula jugando solo o en equipo.")).build(), 16, new Action(){
 
 					@Override
 					public void click(ClickType click, Player player) {
@@ -550,13 +553,11 @@ public class SkywarsLobbyListener implements Listener {
 		InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&a&lTienda"), 4 * 9, true);
 		
 		
-		ib.addItem(new ItemBuilder(Material.ENCHANTED_BOOK).name(TextUtil.format("&aKits Generales"))
+		ib.addItem(new ItemBuilder(Material.ENCHANTED_BOOK).name(TextUtil.format("&aKits estandar"))
 				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Compra los kits más divertidos"))
-				.lore(TextUtil.format("&7de manera que se adapten a tu"))
-				.lore(TextUtil.format("&7estilo de juego y descubre las"))
-				.lore(TextUtil.format("&7diferentes mecánicas que te ofrecen,"))
-				.lore(TextUtil.format("&7decide estratégicamente!"))
+				.lore(TextUtil.format("&8&m-&r &7Cada uno te ofrece una mecánica"))
+				.lore(TextUtil.format("&7de juego diferente."))
+				.lore(TextUtil.format("&7¡Elige estratégicamente!"))
 				.build(), 11, new Action() {
 
 					@Override
@@ -570,10 +571,10 @@ public class SkywarsLobbyListener implements Listener {
 		});
 		
 		
-		ib.addItem(new ItemBuilder(Material.EMPTY_MAP).name(TextUtil.format("&6 Kits Gratuitos!"))
+		ib.addItem(new ItemBuilder(Material.EMPTY_MAP).name(TextUtil.format("&6 Kits Gratuitos"))
 				.lore("")
 				.lore(TextUtil.format("&8&m-&r &7Obtén los increíbles kits Gratuitos"))
-				.lore(TextUtil.format("&7con nuestro sistema; &c&lKit Blazer!"))
+				.lore(TextUtil.format("&7con nuestro sistema; &c&lKit Blazer"))
 				.lore(TextUtil.format("&7Disfruta al máximo las oportunidades"))
 				.lore(TextUtil.format("&7que te brindan los kits"))
 				.lore(TextUtil.format("&7gratuitos en el combate.")).build(), 15);

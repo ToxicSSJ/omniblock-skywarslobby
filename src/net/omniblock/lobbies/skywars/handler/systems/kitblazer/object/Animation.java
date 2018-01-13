@@ -16,7 +16,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-
 import net.omniblock.lobbies.OmniLobbies;
 import net.omniblock.lobbies.apps.general.GeneralHandler;
 import net.omniblock.lobbies.skywars.handler.SkywarsLobby;
@@ -34,14 +33,14 @@ public class Animation {
 
 	protected SkywarsLobby animationLobby;
 
-	protected KitKind kitKind;
+	protected static KitKind kitKind;
 
-	protected Player player;
+	protected static Player player;
 	
 	protected Block animationBlock;
 	
-	protected SWKitsType kitType;
-	protected List<SWKitsType> KitInList = new ArrayList<SWKitsType>();
+	protected static SWKitsType kitType;
+	protected static List<SWKitsType> KitInList = new ArrayList<SWKitsType>();
 
 	protected static final String ANIMATION_KIT_FREE = "KIT_FREE";
 	protected static final String ANIMATION_KIT_SURPRISE = "KIT_SURPRISE";
@@ -88,7 +87,7 @@ public class Animation {
 		return false;
 	}
 	
-	protected void preparePlayerKit(String typeKit) {
+	protected static void preparePlayerKit(String typeKit) {
 		
 		if(typeKit == ANIMATION_KIT_FREE) {
 			
@@ -100,6 +99,7 @@ public class Animation {
 				if (haskits) continue;
 				if (!haskits) KitInList.add(kt);
 			}
+			
 			return;
 		}
 		
@@ -189,6 +189,7 @@ public class Animation {
 	}
 	
 	protected SWKitsType getKit() {
+		
 		SWKitsType kit = KitInList.get(NumberUtil.getRandomInt(0, KitInList.size() - 1));
 		return kit;
 	}

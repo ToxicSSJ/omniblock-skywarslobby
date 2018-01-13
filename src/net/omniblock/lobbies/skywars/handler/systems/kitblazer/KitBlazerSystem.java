@@ -286,9 +286,7 @@ public class KitBlazerSystem extends Animation implements LobbySystem {
 	public void makeKitAnimation(KitKind kk, Player p) {
 
 		player = p;
-		
 		kitKind = kk;
-
 		animationLobby = lobby;
 		animationBlock = block;
 		
@@ -297,9 +295,9 @@ public class KitBlazerSystem extends Animation implements LobbySystem {
 		preparePlayerKit(Animation.ANIMATION_KIT_FREE);
 		
 		if(playerHasAllKit()) return;
-
-		task.cancel();
+		
 		kitType = getKit();
+		task.cancel();
 		blaze.setName(TextUtil.format("&c&lPREPARANDO KIT"));
 
 		animationTask = new BukkitRunnable() {
@@ -422,6 +420,7 @@ public class KitBlazerSystem extends Animation implements LobbySystem {
 
 					cancel();
 					spawnNPCs();
+					makeIA();
 
 					block.getWorld().strikeLightningEffect(block.getLocation());
 
@@ -437,8 +436,6 @@ public class KitBlazerSystem extends Animation implements LobbySystem {
 					effe.start();
 
 					animationRunning = false;
-					
-					makeIA();
 					
 					return;
 				}

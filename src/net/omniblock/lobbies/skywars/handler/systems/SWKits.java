@@ -24,8 +24,7 @@ public class SWKits {
 		KitKind(String inventoryName) {
 
 			this.inventoryName = inventoryName;
-			
-
+		
 		}
 
 		public String getInventoryName() {

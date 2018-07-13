@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import net.omniblock.lobbies.skywars.handler.systems.SWKits.SWKitsType;
 import net.omniblock.network.handlers.base.sql.make.MakeAdvancedSQLQuery;
 import net.omniblock.network.handlers.base.sql.make.MakeSQLQuery;
 import net.omniblock.network.handlers.base.sql.make.MakeSQLUpdate;
@@ -20,8 +19,6 @@ import net.omniblock.network.handlers.base.sql.type.TableType;
 import net.omniblock.network.handlers.base.sql.util.Resolver;
 import net.omniblock.network.handlers.base.sql.util.SQLResultSet;
 import net.omniblock.network.handlers.base.sql.util.VariableUtils;
-import net.omniblock.skywars.patch.managers.CageManager.CageType;
-import net.omniblock.skywars.patch.managers.MapManager;
 
 public class SkywarsBase {
 
@@ -34,51 +31,51 @@ public class SkywarsBase {
 	
 	public static void addMapVote(boolean good){
 		
-		if(Bukkit.getPluginManager().isPluginEnabled("Skywars")){
-			
-			String name = MapManager.CURRENT_MAP != null ? MapManager.CURRENT_MAP.getName() : "Unknow";
-			
-			try {
-				
-				if(!isMapRegistered(name)){
-					
-					MakeSQLUpdate msu = new MakeSQLUpdate(TableType.TOP_MAPS_SKYWARS, TableOperation.INSERT);
-					
-					msu.rowOperation("map_name", name);
-					msu.rowOperation("votes", good ? 1 : 0);
-					
-					msu.execute();
-					return;
-					
-				}
-				
-			} catch (SQLException e) { e.printStackTrace(); }
-			
-			MakeSQLQuery msq = new MakeSQLQuery(TableType.TOP_MAPS_SKYWARS)
-					.select("votes")
-					.where("map_name", name);
-			
-			try {
-				
-				SQLResultSet result = msq.execute();
-				
-				if(result.next()){
-					
-					int votes = result.get("votes") != null ? result.get("votes") : 1;
-					
-					MakeSQLUpdate msu = new MakeSQLUpdate(TableType.TOP_MAPS_SKYWARS, TableOperation.UPDATE);
-					
-					msu.whereOperation("map_name", name);
-					msu.rowOperation("votes", good ? votes++ : votes--);
-					
-					msu.execute();
-					return;
-					
-				}
-				
-			} catch (SQLException e) { e.printStackTrace(); }
-			
-		}
+//		if(Bukkit.getPluginManager().isPluginEnabled("Skywars")){
+//			
+//			//String name = MapManager.CURRENT_MAP != null ? MapManager.CURRENT_MAP.getName() : "Unknow";
+//			
+//			try {
+//				
+//				if(!isMapRegistered(name)){
+//					
+//					MakeSQLUpdate msu = new MakeSQLUpdate(TableType.TOP_MAPS_SKYWARS, TableOperation.INSERT);
+//					
+//					msu.rowOperation("map_name", name);
+//					msu.rowOperation("votes", good ? 1 : 0);
+//					
+//					msu.execute();
+//					return;
+//					
+//				}
+//				
+//			} catch (SQLException e) { e.printStackTrace(); }
+//			
+//			MakeSQLQuery msq = new MakeSQLQuery(TableType.TOP_MAPS_SKYWARS)
+//					.select("votes")
+//					.where("map_name", name);
+//			
+//			try {
+//				
+//				SQLResultSet result = msq.execute();
+//				
+//				if(result.next()){
+//					
+//					int votes = result.get("votes") != null ? result.get("votes") : 1;
+//					
+//					MakeSQLUpdate msu = new MakeSQLUpdate(TableType.TOP_MAPS_SKYWARS, TableOperation.UPDATE);
+//					
+//					msu.whereOperation("map_name", name);
+//					msu.rowOperation("votes", good ? votes++ : votes--);
+//					
+//					msu.execute();
+//					return;
+//					
+//				}
+//				
+//			} catch (SQLException e) { e.printStackTrace(); }
+//			
+//		}
 		
 	}
 	
@@ -360,12 +357,12 @@ public class SkywarsBase {
 				
 				String CAGE_CODE = data_array[0];
 				
-				for(CageType ct : CageType.values()) {
-					if(ct.getCode().equalsIgnoreCase(CAGE_CODE)) {
-						return ct;
-					}
-				}
-				
+//				for(CageType ct : CageType.values()) {
+//					if(ct.getCode().equalsIgnoreCase(CAGE_CODE)) {
+//						return ct;
+//					}
+//				}
+//				
 				break;
 				
 			case EXTRA_INFO:
@@ -382,12 +379,12 @@ public class SkywarsBase {
 				
 				String KIT_CODE = data_array[1];
 				
-				for(SWKitsType kt : SWKitsType.values()) {
-					
-					if(kt.getCode().equalsIgnoreCase(KIT_CODE)) {
-						return kt;
-					}
-				}
+//				for(SWKitsType kt : SWKitsType.values()) {
+//					
+//					if(kt.getCode().equalsIgnoreCase(KIT_CODE)) {
+//						return kt;
+//					}
+//				}
 				
 			default:
 				break;

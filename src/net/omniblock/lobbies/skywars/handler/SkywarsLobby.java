@@ -38,7 +38,6 @@ import net.omniblock.lobbies.apps.joinsigns.LobbySigns;
 import net.omniblock.lobbies.skywars.handler.board.SkywarsLobbyBoard;
 import net.omniblock.lobbies.skywars.handler.events.SkywarsLobbyListener;
 import net.omniblock.lobbies.skywars.handler.systems.cannon.CannonSystem;
-import net.omniblock.lobbies.skywars.handler.systems.kitblazer.KitBlazerSystem;
 import net.omniblock.lobbies.skywars.handler.systems.swjoin.SkywarsJoinSystem;
 import net.omniblock.lobbies.skywars.handler.systems.weekprize.WeekPrizeSystem;
 import net.omniblock.lobbies.skywars.handler.type.SkywarsLobbyItem;
@@ -424,7 +423,7 @@ public class SkywarsLobby extends SidedLobby {
 		if(systems != null)
 			return systems;
 		
-		return Arrays.asList(new WeekPrizeSystem(), new KitBlazerSystem(), new CannonSystem(), new SkywarsJoinSystem());
+		return Arrays.asList(new WeekPrizeSystem(), new CannonSystem(), new SkywarsJoinSystem());
 	}
 	
 	@Override

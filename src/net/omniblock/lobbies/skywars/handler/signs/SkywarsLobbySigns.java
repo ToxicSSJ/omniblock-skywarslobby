@@ -335,5 +335,4 @@ public class SkywarsLobbySigns implements LobbySigns {
 		}.runTaskTimer(OmniLobbies.getInstance(), 20 * 1, 20 * 1);
 		
 	}
-
 }

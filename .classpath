@@ -9,6 +9,5 @@
 	<classpathentry kind="lib" path="C:/GitLab/HolographicDisplays.jar"/>
 	<classpathentry kind="lib" path="C:/GitLab/NoteBlockAPI-1.2.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Omniblock-Packets"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/Omniblock-Skywars"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -22,8 +22,6 @@ import net.omniblock.lobbies.OmniLobbies;
 import net.omniblock.lobbies.apps.general.GeneralHandler;
 import net.omniblock.lobbies.skywars.handler.base.SkywarsBase;
 import net.omniblock.lobbies.skywars.handler.base.SkywarsBase.SelectedItemType;
-import net.omniblock.lobbies.skywars.handler.systems.SWKits.KitKind;
-import net.omniblock.lobbies.skywars.handler.systems.SWKits.SWKitsType;
 import net.omniblock.lobbies.skywars.handler.type.SkywarsLobbyItem;
 import net.omniblock.network.handlers.base.bases.type.BankBase;
 import net.omniblock.network.library.helpers.ItemBuilder;
@@ -40,8 +38,6 @@ import net.omniblock.packets.network.structure.packet.RequestPlayerGameLobbyServ
 import net.omniblock.packets.network.structure.type.PacketSenderType;
 import net.omniblock.packets.network.tool.object.PacketResponder;
 import net.omniblock.packets.object.external.ServerType;
-import net.omniblock.skywars.patch.managers.CageManager.CageKind;
-import net.omniblock.skywars.patch.managers.CageManager.CageType;
 
 public class SkywarsLobbyListener implements Listener {
 
@@ -160,7 +156,7 @@ public class SkywarsLobbyListener implements Listener {
 		} else if(e.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(
 				SkywarsLobbyItem.SHOP.getBuilder().getDisplayname())) {
 			
-			openShop(e.getPlayer());
+			//openShop(e.getPlayer());
 			return;
 			
 		} else if(e.getItem().getItemMeta().getDisplayName().equalsIgnoreCase(
@@ -195,523 +191,505 @@ public class SkywarsLobbyListener implements Listener {
 		
 	}
 	
-	@SuppressWarnings("deprecation")
-	private void openShop(Player player){
-		
-		InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&a&lTienda"), 6 * 9, true);
-		
-		new BukkitRunnable() {
-			
-			int current = 0;
-			List<CageType> types = Lists.newArrayList();
-			
-			{
-				
-				for(CageType type : CageType.values()) {
-					
-					if(type.getKind() == CageKind.COLOR) {
-						
-						types.add(type);
-						
-					}
-					
-				}
-				
-			}
-			
-			@Override
-			public void run() {
-				
-				if(current >= types.size()) { current = 0; }
-				if(ib.getBukkitInventory() == null) { cancel(); return; } 
-				if(!ib.getBukkitInventory().getViewers().contains(player)) { cancel(); return; }
-				
-				Material m = types.get(current).getIcon().getType();
-				short subid = types.get(current).getIcon().getDurability();
-				
-				ib.addItem(new ItemBuilder(m)
-						.durability(subid)
-						.amount(1)
-						.name(TextUtil.format("&eCápsulas"))
-						.lore("")
-						.lore(TextUtil.format("&8&m-&r &7Usa las diferentes cápsulas"))
-						.lore(TextUtil.format("&7que tenemos para tí."))
-						.lore(TextUtil.format("&7¡Comienza la partida de un modo"))
-						.lore(TextUtil.format("&7único y muy personalizable!")).build(), 10, new Action() {
-
-							@Override
-							public void click(ClickType click, Player player) {
-								
-								openCagesShop(player);
-								return;
-								
-							}
-							
-				});
-				
-				current++;
-				
-			}
-			
-		}.runTaskTimer(OmniLobbies.getInstance(), 0L, 10L);
-		
-		ib.addItem(new ItemBuilder(Material.BONE).amount(1)
-				.name(TextUtil.format("&8Animación de eliminación"))
-				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Escoje la animación de"))
-				.lore(TextUtil.format("&7muerte que más te guste, esta"))
-				.lore(TextUtil.format("&7será reproducida cuando seas"))
-				.lore(TextUtil.format("&7eliminado en una partida."))
-				.lore("")
-				.lore(TextUtil.format("   &6&l(Próximamente) ")).build(), 13);
-		
-		ib.addItem(new ItemBuilder(Material.BOW).amount(1)
-				.name(TextUtil.format("&8Animación de disparo"))
-				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Elige las partículas que"))
-				.lore(TextUtil.format("&7más te gusten."))
-				.lore(TextUtil.format("&7Estas aparecerán detrás"))
-				.lore(TextUtil.format("&7de las flechas que dispares."))
-				.lore("")
-				.lore(TextUtil.format("   &6&l(Próximamente) ")).build(), 16);
-		
-		ib.addItem(new ItemBuilder(Material.getMaterial(439)).amount(1)
-				.name(TextUtil.format("&6Kits"))
-				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Selecciona el kit que más"))
-				.lore(TextUtil.format("&7se adapte a tu estilo de juego,"))
-				.lore(TextUtil.format("&7este será una gran ventaja para tí.")).build(), 28,
-				
-				new Action() {
-
-					@Override
-					public void click(ClickType click, Player player) {
-						
-						openKitShop(player);
-						
-					}
-			
-		});
-		
-		ib.addItem(new ItemBuilder(Material.COAL_BLOCK).amount(1)
-				.name(TextUtil.format("&c&lPróximamente...")).build(), 31);
-		
-		ib.addItem(new ItemBuilder(Material.COAL_BLOCK).amount(1)
-				.name(TextUtil.format("&c&lPróximamente...")).build(), 34);
-		
-		ib.open(player);
-		
-		return;
-		
-	}
+//	@SuppressWarnings("deprecation")
+//	private void openShop(Player player){
+//		
+//		InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&a&lTienda"), 6 * 9, true);
+//		
+//		new BukkitRunnable() {
+//			
+//			int current = 0;
+//			List<CageType> types = Lists.newArrayList();
+//			
+//			{
+//				
+//				for(CageType type : CageType.values()) {
+//					
+//					if(type.getKind() == CageKind.COLOR) {
+//						
+//						types.add(type);
+//						
+//					}
+//					
+//				}
+//				
+//			}
+//			
+//			@Override
+//			public void run() {
+//				
+//				if(current >= types.size()) { current = 0; }
+//				if(ib.getBukkitInventory() == null) { cancel(); return; } 
+//				if(!ib.getBukkitInventory().getViewers().contains(player)) { cancel(); return; }
+//				
+//				Material m = types.get(current).getIcon().getType();
+//				short subid = types.get(current).getIcon().getDurability();
+//				
+//				ib.addItem(new ItemBuilder(m)
+//						.durability(subid)
+//						.amount(1)
+//						.name(TextUtil.format("&eCápsulas"))
+//						.lore("")
+//						.lore(TextUtil.format("&8&m-&r &7Usa las diferentes cápsulas"))
+//						.lore(TextUtil.format("&7que tenemos para tí."))
+//						.lore(TextUtil.format("&7¡Comienza la partida de un modo"))
+//						.lore(TextUtil.format("&7único y muy personalizable!")).build(), 10, new Action() {
+//
+//							@Override
+//							public void click(ClickType click, Player player) {
+//								
+//								openCagesShop(player);
+//								return;
+//								
+//							}
+//							
+//				});
+//				
+//				current++;
+//				
+//			}
+//			
+//		}.runTaskTimer(OmniLobbies.getInstance(), 0L, 10L);
+//		
+//		ib.addItem(new ItemBuilder(Material.BONE).amount(1)
+//				.name(TextUtil.format("&8Animación de eliminación"))
+//				.lore("")
+//				.lore(TextUtil.format("&8&m-&r &7Escoje la animación de"))
+//				.lore(TextUtil.format("&7muerte que más te guste, esta"))
+//				.lore(TextUtil.format("&7será reproducida cuando seas"))
+//				.lore(TextUtil.format("&7eliminado en una partida."))
+//				.lore("")
+//				.lore(TextUtil.format("   &6&l(Próximamente) ")).build(), 13);
+//		
+//		ib.addItem(new ItemBuilder(Material.BOW).amount(1)
+//				.name(TextUtil.format("&8Animación de disparo"))
+//				.lore("")
+//				.lore(TextUtil.format("&8&m-&r &7Elige las partículas que"))
+//				.lore(TextUtil.format("&7más te gusten."))
+//				.lore(TextUtil.format("&7Estas aparecerán detrás"))
+//				.lore(TextUtil.format("&7de las flechas que dispares."))
+//				.lore("")
+//				.lore(TextUtil.format("   &6&l(Próximamente) ")).build(), 16);
+//		
+//		ib.addItem(new ItemBuilder(Material.COAL_BLOCK).amount(1)
+//				.name(TextUtil.format("&c&lPróximamente...")).build(), 31);
+//		
+//		ib.addItem(new ItemBuilder(Material.COAL_BLOCK).amount(1)
+//				.name(TextUtil.format("&c&lPróximamente...")).build(), 34);
+//		
+//		ib.open(player);
+//		
+//		return;
+//		
+//	}
 	
-	@SuppressWarnings("deprecation")
-	private void openCagesShop(Player player) {
-		
-		InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&a&lTienda"), 4 * 9, true);
-		
-		new BukkitRunnable() {
-			
-			int current = 0;
-			List<CageType> types = Lists.newArrayList();
-			
-			{
-				
-				for(CageType type : CageType.values()) {
-					
-					if(type.getKind() == CageKind.COLOR) {
-						
-						types.add(type);
-						
-					}
-					
-				}
-				
-			}
-			
-			@Override
-			public void run() {
-				
-				if(current >= types.size()) current = 0;
-				if(ib.getBukkitInventory() == null) { cancel(); return; } 
-				if(!ib.getBukkitInventory().getViewers().contains(player)) { cancel(); return; }
-				
-				Material m = types.get(current).getIcon().getType();
-				short subid = types.get(current).getIcon().getDurability();
-				
-				ib.addItem(new ItemBuilder(m)
-						.durability(subid)
-						.amount(1)
-						.name(TextUtil.format("&dColores"))
-						.lore("")
-						.lore(TextUtil.format("&8&m-&r &7¡Para empezar la partida de"))
-						.lore(TextUtil.format("&7la forma más colorida posible!"))
-						.lore(TextUtil.format("&7Disponibles para cualquier jugador.")).build(), 10, new Action() {
-
-							@Override
-							public void click(ClickType click, Player player) {
-								
-								openCageShop(CageKind.COLOR, player);
-								return;
-								
-							}
-							
-				});
-				
-				current++;
-				
-			}
-			
-		}.runTaskTimer(OmniLobbies.getInstance(), 0L, 10L);
-		
-		ib.addItem(new ItemBuilder(Material.REDSTONE).amount(1)
-				.name(TextUtil.format("&6Temporada"))
-				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Estás cápsulas solo estarán"))
-				.lore(TextUtil.format("&7disponibles en fechas especiales."))
-				.lore(TextUtil.format("&7Date prisa en adquirirlas."))
-				.lore(TextUtil.format("&7¡Posiblemente no vuelvas a tener"))
-				.lore(TextUtil.format("&7otra oportunidad!")).build(), 12, new Action(){
-
-					@Override
-					public void click(ClickType click, Player player) {
-		
-						openCageShop(CageKind.SEASONAL, player);
-						return;
-		
-					}
-
-		});
-		
-		ib.addItem(new ItemBuilder(Material.getMaterial(385)).amount(1)
-				.name(TextUtil.format("&4Premio"))
-				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Sólo podrás conseguirlas en"))
-				.lore(TextUtil.format("&7eventos y premios semanales.")).build(), 14, new Action(){
-
-					@Override
-					public void click(ClickType click, Player player) {
-				
-						openCageShop(CageKind.CUSTOM, player);
-						return;
-				
-					}
-	
-		});
-		
-		ib.addItem(new ItemBuilder(Material.DIAMOND).amount(1)
-				.name(TextUtil.format("&eRango"))
-				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Únicamente accesibles para los"))
-				.lore(TextUtil.format("&7jugadores con rango Golem y Titán."))
-				.lore(TextUtil.format("&7Estas cápsulas cambian de forma"))
-				.lore(TextUtil.format("&7al poseer animaciones únicas."))
-				.lore(TextUtil.format("&7Teniendo una variante diferente"))
-				.lore(TextUtil.format("de la cápsula jugando solo o en equipo.")).build(), 16, new Action(){
-
-					@Override
-					public void click(ClickType click, Player player) {
-						
-						openCageShop(CageKind.VIP, player);
-						return;
-						
-					}
-			
-		});
-		
-		ib.addItem(new ItemBuilder(Material.ARROW).amount(1)
-				.name(TextUtil.format("&7Volver")).build(), 31, new Action(){
-
-					@Override
-					public void click(ClickType click, Player player) {
-						
-						openShop(player);
-						return;
-						
-					}
-			
-		});
-		
-		ib.open(player);
-		
-		return;
-		
-	}
-	
-	private void openCageShop(CageKind ck, Player player) {
-		
-		InventoryBuilder ib = new InventoryBuilder(TextUtil.format(ck.getInventoryName()), 6 * 9, true);
-		
-		int CURRENT_SLOT = 0;
-		int MAX_SLOT = (6 * 9) - 1;
-		
-		for(CageType ct : CageType.values()){
-			
-			if(ct.getKind() != ck) continue;
-			if(CURRENT_SLOT == MAX_SLOT) break;
-			
-			ib.addItem(
-					
-					ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), ct.getCode()) ?
-							
-							new ItemBuilder(ct.getIcon().getType())
-							.amount(1)
-							.durability(ct.getIcon().getDurability())
-							.hideAtributes()
-							.name(TextUtil.format(ct.getName()))
-							.lore("")
-							.lore(ct.getLore())
-							.lore("")
-							.lore(TextUtil.format(" &a¡Jaula Adquirida!"))
-							.lore(TextUtil.format(((CageType) SkywarsBase.getSelectedItem(SelectedItemType.CAGE, SkywarsBase.getSelectedItems(player))).getCode().equalsIgnoreCase(ct.getCode()) ?
-									"       &a¡Usando!" :
-									" &7(Click para usar)"
-									)).build() :
-								
-							new ItemBuilder(Material.STAINED_GLASS)
-							.amount(1)
-							.durability((short) 7)
-							.hideAtributes()
-							.name(TextUtil.format(" &c&l&o? "))
-							.lore("")
-							.lore(ct.getLore())
-							.lore("")
-							.lore(TextUtil.format(" &aPrecio: &7" + ct.getPrice()))
-							.lore(TextUtil.format(" &6Animación: &7" + (ct.hasAnimation() ? "Si" : "No"))).build(),
-							
-					CURRENT_SLOT, new Action(){
-
-									boolean inuse = (((CageType) SkywarsBase.getSelectedItem(SelectedItemType.CAGE, SkywarsBase.getSelectedItems(player))).getCode().equalsIgnoreCase(ct.getCode())) ? true : false;
-									
-									boolean hasmoney = BankBase.getMoney(player) >= ct.getPrice();
-									boolean hascage = ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), ct.getCode());
-								
-									@Override
-									public void click(ClickType click, Player player) {
-										
-										if(inuse) return;
-										
-										if(hascage){
-											
-											SkywarsBase.setSelectedItems(player, SkywarsBase.setSelectedItem(SelectedItemType.CAGE, SkywarsBase.getSelectedItems(player), ct.getCode()));
-											
-											player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 2, -1);
-											openCageShop(ck, player);
-											return;
-											
-										}
-										
-										if(hasmoney){
-											
-											BankBase.setMoney(player, BankBase.getMoney(player) - ct.getPrice());
-											
-											InstantFireworkUtil.spawn(player.getLocation());
-											SkywarsBase.addItem(player, ct.getCode());
-											
-											player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-											openCageShop(ck, player);
-											return;
-											
-										}
-										
-										player.closeInventory();
-										
-										player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
-										player.sendMessage(TextUtil.format("&cNo tienes dinero suficiente para comprar esta jaula."));
-										return;
-										
-									}
-								
-							});
-			
-			CURRENT_SLOT++;
-			
-		}
-		
-		ib.addItem(new ItemBuilder(Material.ARROW).amount(1)
-				.name(TextUtil.format("&7Volver")).build(), 49, new Action(){
-
-					@Override
-					public void click(ClickType click, Player player) {
-						
-						openCagesShop(player);
-						return;
-						
-					}
-			
-		});
-		
-		ib.open(player);
-		return;
-		
-	}
+//	@SuppressWarnings("deprecation")
+//	private void openCagesShop(Player player) {
+//		
+//		InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&a&lTienda"), 4 * 9, true);
+//		
+//		new BukkitRunnable() {
+//			
+//			int current = 0;
+//			List<CageType> types = Lists.newArrayList();
+//			
+//			{
+//				
+//				for(CageType type : CageType.values()) {
+//					
+//					if(type.getKind() == CageKind.COLOR) {
+//						
+//						types.add(type);
+//						
+//					}
+//					
+//				}
+//				
+//			}
+//			
+//			@Override
+//			public void run() {
+//				
+//				if(current >= types.size()) current = 0;
+//				if(ib.getBukkitInventory() == null) { cancel(); return; } 
+//				if(!ib.getBukkitInventory().getViewers().contains(player)) { cancel(); return; }
+//				
+//				Material m = types.get(current).getIcon().getType();
+//				short subid = types.get(current).getIcon().getDurability();
+//				
+//				ib.addItem(new ItemBuilder(m)
+//						.durability(subid)
+//						.amount(1)
+//						.name(TextUtil.format("&dColores"))
+//						.lore("")
+//						.lore(TextUtil.format("&8&m-&r &7¡Para empezar la partida de"))
+//						.lore(TextUtil.format("&7la forma más colorida posible!"))
+//						.lore(TextUtil.format("&7Disponibles para cualquier jugador.")).build(), 10, new Action() {
+//
+//							@Override
+//							public void click(ClickType click, Player player) {
+//								
+//								openCageShop(CageKind.COLOR, player);
+//								return;
+//								
+//							}
+//							
+//				});
+//				
+//				current++;
+//				
+//			}
+//			
+//		}.runTaskTimer(OmniLobbies.getInstance(), 0L, 10L);
+//		
+//		ib.addItem(new ItemBuilder(Material.REDSTONE).amount(1)
+//				.name(TextUtil.format("&6Temporada"))
+//				.lore("")
+//				.lore(TextUtil.format("&8&m-&r &7Estás cápsulas solo estarán"))
+//				.lore(TextUtil.format("&7disponibles en fechas especiales."))
+//				.lore(TextUtil.format("&7Date prisa en adquirirlas."))
+//				.lore(TextUtil.format("&7¡Posiblemente no vuelvas a tener"))
+//				.lore(TextUtil.format("&7otra oportunidad!")).build(), 12, new Action(){
+//
+//					@Override
+//					public void click(ClickType click, Player player) {
+//		
+//						openCageShop(CageKind.SEASONAL, player);
+//						return;
+//		
+//					}
+//
+//		});
+//		
+//		ib.addItem(new ItemBuilder(Material.getMaterial(385)).amount(1)
+//				.name(TextUtil.format("&4Premio"))
+//				.lore("")
+//				.lore(TextUtil.format("&8&m-&r &7Sólo podrás conseguirlas en"))
+//				.lore(TextUtil.format("&7eventos y premios semanales.")).build(), 14, new Action(){
+//
+//					@Override
+//					public void click(ClickType click, Player player) {
+//				
+//						openCageShop(CageKind.CUSTOM, player);
+//						return;
+//				
+//					}
+//	
+//		});
+//		
+//		ib.addItem(new ItemBuilder(Material.DIAMOND).amount(1)
+//				.name(TextUtil.format("&eRango"))
+//				.lore("")
+//				.lore(TextUtil.format("&8&m-&r &7Únicamente accesibles para los"))
+//				.lore(TextUtil.format("&7jugadores con rango Golem y Titán."))
+//				.lore(TextUtil.format("&7Estas cápsulas cambian de forma"))
+//				.lore(TextUtil.format("&7al poseer animaciones únicas."))
+//				.lore(TextUtil.format("&7Teniendo una variante diferente"))
+//				.lore(TextUtil.format("&7de la cápsula jugando solo o en equipo.")).build(), 16, new Action(){
+//
+//					@Override
+//					public void click(ClickType click, Player player) {
+//						
+//						openCageShop(CageKind.VIP, player);
+//						return;
+//						
+//					}
+//			
+//		});
+//		
+//		ib.addItem(new ItemBuilder(Material.ARROW).amount(1)
+//				.name(TextUtil.format("&7Volver")).build(), 31, new Action(){
+//
+//					@Override
+//					public void click(ClickType click, Player player) {
+//						
+//						openShop(player);
+//						return;
+//						
+//					}
+//			
+//		});
+//		
+//		ib.open(player);
+//		
+//		return;
+//		
+//	}
+//	
+//	private void openCageShop(CageKind ck, Player player) {
+//		
+//		InventoryBuilder ib = new InventoryBuilder(TextUtil.format(ck.getInventoryName()), 6 * 9, true);
+//		
+//		int CURRENT_SLOT = 0;
+//		int MAX_SLOT = (6 * 9) - 1;
+//		
+//		for(CageType ct : CageType.values()){
+//			
+//			if(ct.getKind() != ck) continue;
+//			if(CURRENT_SLOT == MAX_SLOT) break;
+//			
+//			ib.addItem(
+//					
+//					ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), ct.getCode()) ?
+//							
+//							new ItemBuilder(ct.getIcon().getType())
+//							.amount(1)
+//							.durability(ct.getIcon().getDurability())
+//							.hideAtributes()
+//							.name(TextUtil.format(ct.getName()))
+//							.lore("")
+//							.lore(ct.getLore())
+//							.lore("")
+//							.lore(TextUtil.format(" &a¡Jaula Adquirida!"))
+//							.lore(TextUtil.format(((CageType) SkywarsBase.getSelectedItem(SelectedItemType.CAGE, SkywarsBase.getSelectedItems(player))).getCode().equalsIgnoreCase(ct.getCode()) ?
+//									"       &a¡Usando!" :
+//									" &7(Click para usar)"
+//									)).build() :
+//								
+//							new ItemBuilder(Material.STAINED_GLASS)
+//							.amount(1)
+//							.durability((short) 7)
+//							.hideAtributes()
+//							.name(TextUtil.format(" &c&l&o? "))
+//							.lore("")
+//							.lore(ct.getLore())
+//							.lore("")
+//							.lore(TextUtil.format(" &aPrecio: &7" + ct.getPrice()))
+//							.lore(TextUtil.format(" &6Animación: &7" + (ct.hasAnimation() ? "Si" : "No"))).build(),
+//							
+//					CURRENT_SLOT, new Action(){
+//
+//									boolean inuse = (((CageType) SkywarsBase.getSelectedItem(SelectedItemType.CAGE, SkywarsBase.getSelectedItems(player))).getCode().equalsIgnoreCase(ct.getCode())) ? true : false;
+//									
+//									boolean hasmoney = BankBase.getMoney(player) >= ct.getPrice();
+//									boolean hascage = ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), ct.getCode());
+//								
+//									@Override
+//									public void click(ClickType click, Player player) {
+//										
+//										if(inuse) return;
+//										
+//										if(hascage){
+//											
+//											SkywarsBase.setSelectedItems(player, SkywarsBase.setSelectedItem(SelectedItemType.CAGE, SkywarsBase.getSelectedItems(player), ct.getCode()));
+//											
+//											player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 2, -1);
+//											openCageShop(ck, player);
+//											return;
+//											
+//										}
+//										
+//										if(hasmoney){
+//											
+//											BankBase.setMoney(player, BankBase.getMoney(player) - ct.getPrice());
+//											
+//											InstantFireworkUtil.spawn(player.getLocation());
+//											SkywarsBase.addItem(player, ct.getCode());
+//											
+//											player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+//											openCageShop(ck, player);
+//											return;
+//											
+//										}
+//										
+//										player.closeInventory();
+//										
+//										player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
+//										player.sendMessage(TextUtil.format("&cNo tienes dinero suficiente para comprar esta jaula."));
+//										return;
+//										
+//									}
+//								
+//							});
+//			
+//			CURRENT_SLOT++;
+//			
+//		}
+//		
+//		ib.addItem(new ItemBuilder(Material.ARROW).amount(1)
+//				.name(TextUtil.format("&7Volver")).build(), 49, new Action(){
+//
+//					@Override
+//					public void click(ClickType click, Player player) {
+//						
+//						openCagesShop(player);
+//						return;
+//						
+//					}
+//			
+//		});
+//		
+//		ib.open(player);
+//		return;
+//		
+//	}
 	
 	
-	private void openKitShop(Player player) {
-		
-		
-		InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&a&lTienda"), 4 * 9, true);
-		
-		
-		ib.addItem(new ItemBuilder(Material.ENCHANTED_BOOK).name(TextUtil.format("&aKits estandar"))
-				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Cada uno te ofrece una mecánica"))
-				.lore(TextUtil.format("&7de juego diferente."))
-				.lore(TextUtil.format("&7¡Elige estratégicamente!"))
-				.build(), 11, new Action() {
-
-					@Override
-					public void click(ClickType click, Player player) {
-						
-						openKitShop(KitKind.GENERAL, player);
-						return;
-						
-					}
-
-		});
-		
-		
-		ib.addItem(new ItemBuilder(Material.EMPTY_MAP).name(TextUtil.format("&6 Kits Gratuitos"))
-				.lore("")
-				.lore(TextUtil.format("&8&m-&r &7Obtén los increíbles kits Gratuitos"))
-				.lore(TextUtil.format("&7con nuestro sistema; &c&lKit Blazer"))
-				.lore(TextUtil.format("&7Disfruta al máximo las oportunidades"))
-				.lore(TextUtil.format("&7que te brindan los kits"))
-				.lore(TextUtil.format("&7gratuitos en el combate.")).build(), 15);
-		
-		
-		ib.addItem(new ItemBuilder(Material.ARROW).amount(1)
-				.name(TextUtil.format("&7Volver")).build(), 31, new Action(){
-
-					@Override
-					public void click(ClickType click, Player player) {
-						
-						openShop(player);
-						return;
-						
-					}
-
-		});
-		
-		ib.open(player);
-		return;
-		
-	}
+//	private void openKitShop(Player player) {
+//		
+//		
+//		InventoryBuilder ib = new InventoryBuilder(TextUtil.format("&a&lTienda"), 4 * 9, true);
+//		
+//		
+//		ib.addItem(new ItemBuilder(Material.ENCHANTED_BOOK).name(TextUtil.format("&aKits estandar"))
+//				.lore("")
+//				.lore(TextUtil.format("&8&m-&r &7Cada uno te ofrece una mecánica"))
+//				.lore(TextUtil.format("&7de juego diferente."))
+//				.lore(TextUtil.format("&7¡Elige estratégicamente!"))
+//				.build(), 11, new Action() {
+//
+//					@Override
+//					public void click(ClickType click, Player player) {
+//						
+//						openKitShop(KitKind.GENERAL, player);
+//						return;
+//						
+//					}
+//
+//		});
+//		
+//		
+//		ib.addItem(new ItemBuilder(Material.EMPTY_MAP).name(TextUtil.format("&6 Kits Gratuitos"))
+//				.lore("")
+//				.lore(TextUtil.format("&8&m-&r &7Obtén los increíbles kits Gratuitos"))
+//				.lore(TextUtil.format("&7con nuestro sistema; &c&lKit Blazer"))
+//				.lore(TextUtil.format("&7Disfruta al máximo las oportunidades"))
+//				.lore(TextUtil.format("&7que te brindan los kits"))
+//				.lore(TextUtil.format("&7gratuitos en el combate.")).build(), 15);
+//		
+//		
+//		ib.addItem(new ItemBuilder(Material.ARROW).amount(1)
+//				.name(TextUtil.format("&7Volver")).build(), 31, new Action(){
+//
+//					@Override
+//					public void click(ClickType click, Player player) {
+//						
+//						openShop(player);
+//						return;
+//						
+//					}
+//
+//		});
+//		
+//		ib.open(player);
+//		return;
+//		
+//	}
 	
-	private void openKitShop(KitKind kk, Player player) {
-		
-		InventoryBuilder ib = new InventoryBuilder(TextUtil.format(kk.getInventoryName()), 6 * 9, true);
-		
-		String colorString = " ";
-		
-		if(kk == KitKind.FREE) colorString = "&e";
-		if(kk == KitKind.GENERAL) colorString = "&6";
-		
-		int CURRENT_SLOT = 0;
-		int MAX_SLOT = (6 * 9) - 1;
-		
-		for(SWKitsType kt : SWKitsType.values()) {
-				
-			if(kt.getKind() != kk) continue;
-			if(CURRENT_SLOT == MAX_SLOT) break;
-			
-		ib.addItem(
-					
-					ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), kt.getCode()) ?
-							
-							new ItemBuilder(kt.getMaterial())
-							.amount(1)
-							.durability((short) kt.getData())
-							.hideAtributes()
-							.name(TextUtil.format(colorString + kt.getName() + " " + kt.getRarityString()))
-							.lore("")
-							.lore(kt.getLore())
-							.lore("")
-							.lore("&6Rareza: &7" + kt.getRarity())
-							.lore("")
-							.lore(TextUtil.format(" &a¡Kit Adquirido!"))
-							.lore(TextUtil.format(( (SWKitsType) SkywarsBase.getSelectedItem(SelectedItemType.KIT, SkywarsBase.getSelectedItems(player))).getCode().equalsIgnoreCase(kt.getCode()) ?
-									"       &a¡Usando!" :
-									" &7(Click para usar)"
-									)).build()	:
-						
-							new ItemBuilder(Material.STAINED_GLASS)
-							.amount(1)
-							.durability((short) 7)
-							.hideAtributes()
-							.name(TextUtil.format(" &c&l&o? "))
-							.lore("")
-							.lore(kt.getLore())
-							.lore("")
-							.lore(TextUtil.format(" &aPrecio: &7" + kt.getPrice()))
-							.lore(TextUtil.format(" &6Rareza: &7" + kt.getRarity())).build(),
-							
-					CURRENT_SLOT, new Action(){
-
-									boolean inuse = (((SWKitsType) SkywarsBase.getSelectedItem(SelectedItemType.KIT, SkywarsBase.getSelectedItems(player))).getCode().equalsIgnoreCase(kt.getCode())) ? true : false;
-									
-									boolean hasmoney = BankBase.getMoney(player) >= kt.getPrice();
-									boolean haskits = ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), kt.getCode());
-								
-									@Override
-									public void click(ClickType click, Player player) {
-										
-										if(inuse) return;
-										
-										if(haskits){
-											
-											SkywarsBase.setSelectedItems(player, SkywarsBase.setSelectedItem(SelectedItemType.KIT, SkywarsBase.getSelectedItems(player), kt.getCode()));
-											
-											player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 2, -1);
-											openKitShop(kk, player);
-											return;
-											
-										}
-										
-										if(hasmoney){
-											
-											BankBase.setMoney(player, BankBase.getMoney(player) - kt.getPrice());
-											
-											InstantFireworkUtil.spawn(player.getLocation());
-											SkywarsBase.addItem(player, kt.getCode());
-											
-											player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-											openKitShop(kk, player);
-											return;
-											
-										}
-										
-										player.closeInventory();
-										
-										player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
-										player.sendMessage(TextUtil.format("&cNo tienes dinero suficiente para comprar este kit"));
-										return;
-										
-									}
-								
-							});
-			
-			CURRENT_SLOT++;
-							
-		}
-		
-		ib.addItem(new ItemBuilder(Material.ARROW).amount(1)
-				.name(TextUtil.format("&7Volver")).build(), 49, new Action(){
-
-					@Override
-					public void click(ClickType click, Player player) {
-						
-						openKitShop(player);
-						return;
-						
-					}
-			
-		});
-		
-		ib.open(player);
-		return;
-
-	}
+//	private void openKitShop(KitKind kk, Player player) {
+//		
+//		InventoryBuilder ib = new InventoryBuilder(TextUtil.format(kk.getInventoryName()), 6 * 9, true);
+//		
+//		String colorString = " ";
+//		
+//		if(kk == KitKind.FREE) colorString = "&e";
+//		if(kk == KitKind.GENERAL) colorString = "&6";
+//		
+//		int CURRENT_SLOT = 0;
+//		int MAX_SLOT = (6 * 9) - 1;
+//		
+//		for(SWKitsType kt : SWKitsType.values()) {
+//				
+//			if(kt.getKind() != kk) continue;
+//			if(CURRENT_SLOT == MAX_SLOT) break;
+//			
+//		ib.addItem(
+//					
+//					ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), kt.getCode()) ?
+//							
+//							new ItemBuilder(kt.getMaterial())
+//							.amount(1)
+//							.durability((short) kt.getData())
+//							.hideAtributes()
+//							.name(TextUtil.format(colorString + kt.getName() + " " + kt.getRarityString()))
+//							.lore("")
+//							.lore(kt.getLore())
+//							.lore("")
+//							.lore("&6Rareza: &7" + kt.getRarity())
+//							.lore("")
+//							.lore(TextUtil.format(" &a¡Kit Adquirido!"))
+//							.lore(TextUtil.format(( (SWKitsType) SkywarsBase.getSelectedItem(SelectedItemType.KIT, SkywarsBase.getSelectedItems(player))).getCode().equalsIgnoreCase(kt.getCode()) ?
+//									"       &a¡Usando!" :
+//									" &7(Click para usar)"
+//									)).build()	:
+//						
+//							new ItemBuilder(Material.STAINED_GLASS)
+//							.amount(1)
+//							.durability((short) 7)
+//							.hideAtributes()
+//							.name(TextUtil.format(" &c&l&o? "))
+//							.lore("")
+//							.lore(kt.getLore())
+//							.lore("")
+//							.lore(TextUtil.format(" &aPrecio: &7" + kt.getPrice()))
+//							.lore(TextUtil.format(" &6Rareza: &7" + kt.getRarity())).build(),
+//							
+//					CURRENT_SLOT, new Action(){
+//
+//									boolean inuse = (((SWKitsType) SkywarsBase.getSelectedItem(SelectedItemType.KIT, SkywarsBase.getSelectedItems(player))).getCode().equalsIgnoreCase(kt.getCode())) ? true : false;
+//									
+//									boolean hasmoney = BankBase.getMoney(player) >= kt.getPrice();
+//									boolean haskits = ArrayUtils.contains(SkywarsBase.getItems(player).split(";"), kt.getCode());
+//								
+//									@Override
+//									public void click(ClickType click, Player player) {
+//										
+//										if(inuse) return;
+//										
+//										if(haskits){
+//											
+//											SkywarsBase.setSelectedItems(player, SkywarsBase.setSelectedItem(SelectedItemType.KIT, SkywarsBase.getSelectedItems(player), kt.getCode()));
+//											
+//											player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 2, -1);
+//											openKitShop(kk, player);
+//											return;
+//											
+//										}
+//										
+//										if(hasmoney){
+//											
+//											BankBase.setMoney(player, BankBase.getMoney(player) - kt.getPrice());
+//											
+//											InstantFireworkUtil.spawn(player.getLocation());
+//											SkywarsBase.addItem(player, kt.getCode());
+//											
+//											player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+//											openKitShop(kk, player);
+//											return;
+//											
+//										}
+//										
+//										player.closeInventory();
+//										
+//										player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BASS, 1, -1);
+//										player.sendMessage(TextUtil.format("&cNo tienes dinero suficiente para comprar este kit"));
+//										return;
+//										
+//									}
+//								
+//							});
+//			
+//			CURRENT_SLOT++;
+//							
+//		}
+//		
+//		ib.addItem(new ItemBuilder(Material.ARROW).amount(1)
+//				.name(TextUtil.format("&7Volver")).build(), 49, new Action(){
+//
+//					@Override
+//					public void click(ClickType click, Player player) {
+//						
+//						openKitShop(player);
+//						return;
+//						
+//					}
+//			
+//		});
+//		
+//		ib.open(player);
+//		return;
+//
+//	}
 	
 	private void openAchievements(Player player) {
 

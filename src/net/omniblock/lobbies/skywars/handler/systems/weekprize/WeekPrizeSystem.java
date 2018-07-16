@@ -570,15 +570,15 @@ public class WeekPrizeSystem implements LobbySystem, Listener {
 							
 							if(cacheRound == 26)
 								for(ArmorStand stand : stands)
-									stand.getEquipment().setBoots(new ItemBuilder(Material.LEATHER_BOOTS).amount(1).color(Color.BLACK).build());
+									stand.getEquipment().setBoots(new ItemBuilder(Material.LEATHER_BOOTS).amount(1).build());
 							
 							if(cacheRound == 27)
 								for(ArmorStand stand : stands)
-									stand.getEquipment().setLeggings(new ItemBuilder(Material.LEATHER_LEGGINGS).amount(1).color(Color.BLACK).build());
+									stand.getEquipment().setLeggings(new ItemBuilder(Material.LEATHER_LEGGINGS).amount(1).build());
 							
 							if(cacheRound == 28)
 								for(ArmorStand stand : stands)
-									stand.getEquipment().setChestplate(new ItemBuilder(Material.LEATHER_CHESTPLATE).amount(1).color(Color.BLACK).build());
+									stand.getEquipment().setChestplate(new ItemBuilder(Material.LEATHER_CHESTPLATE).amount(1).build());
 							
 							if(cacheRound == 29)
 								effect.getLocation().getWorld().playSound(effect.getLocation(), Sound.ENTITY_ENDERDRAGON_GROWL, 15, -2);

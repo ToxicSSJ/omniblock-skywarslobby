@@ -20,7 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -39,13 +38,10 @@ import net.omniblock.lobbies.skywars.handler.board.SkywarsLobbyBoard;
 import net.omniblock.lobbies.skywars.handler.events.SkywarsLobbyListener;
 import net.omniblock.lobbies.skywars.handler.systems.cannon.CannonSystem;
 import net.omniblock.lobbies.skywars.handler.systems.swjoin.SkywarsJoinSystem;
-import net.omniblock.lobbies.skywars.handler.systems.weekprize.WeekPrizeSystem;
 import net.omniblock.lobbies.skywars.handler.type.SkywarsLobbyItem;
 import net.omniblock.lobbies.utils.PlayerUtils;
 import net.omniblock.network.library.addons.resourceaddon.ResourceHandler;
 import net.omniblock.network.library.addons.resourceaddon.type.ResourceType;
-import net.omniblock.network.library.helpers.ItemBuilder;
-import net.omniblock.network.library.helpers.geometric.Cuboid;
 import net.omniblock.network.library.utils.TextUtil;
 import net.omniblock.network.systems.InformationCenterPatcher;
 import net.omniblock.network.systems.InformationCenterPatcher.Information;
@@ -166,70 +162,6 @@ public class SkywarsLobby extends SidedLobby {
 		if(side == SKYWARS_Z_SIDE) {
 			
 			return Arrays.asList(
-					
-					new BukkitRunnable(){
-						
-						@Override
-						public void run() {
-							
-							Cuboid cuboid = new Cuboid(
-									scan.get("MAIN_LOBBY_PORTAL_POS1").get(0),
-									scan.get("MAIN_LOBBY_PORTAL_POS2").get(0)
-									);
-							
-							List<Block> blocks = new ArrayList<Block>();
-							cuboid.iterator().forEachRemaining(blocks::add);
-							
-							blocks.stream().forEach(block -> {
-								if(block.getType() == Material.AIR) {
-									if(block.getLocation().getBlockY() != scan.get("MAIN_LOBBY_PORTAL_POS2").get(0).getBlockY())
-										block.setType(Material.STATIONARY_LAVA);
-								}
-							});
-							return;
-							
-						}
-						
-					}.runTaskLater(OmniLobbies.getInstance(), 15L),
-					
-					new BukkitRunnable(){
-
-						int x = 0;
-						
-						ItemStack lastMat = new ItemStack(Material.REDSTONE_BLOCK, 1, (byte) 15);
-						ItemStack[] materials = new ItemStack[] { 
-								new ItemBuilder(Material.STAINED_GLASS, 1).durability((short) 15).build(),
-								new ItemBuilder(Material.STAINED_GLASS, 1).durability((short) 7).build(),
-								new ItemBuilder(Material.STAINED_GLASS, 1).durability((short) 8).build(),
-								new ItemBuilder(Material.STAINED_GLASS, 1).durability((short) 4).build(),
-								new ItemBuilder(Material.STAINED_GLASS, 1).durability((short) 1).build(),
-								new ItemBuilder(Material.STAINED_GLASS, 1).durability((short) 14).build()
-								};
-						
-						Cuboid cuboid;
-						
-						@SuppressWarnings("deprecation")
-						@Override
-						public void run() {
-							
-							if(cuboid == null)
-								cuboid = new Cuboid(scan.get("LETTER_Z_POS1").get(0), scan.get("LETTER_Z_POS2").get(0));
-							
-							List<Block> blocks = new ArrayList<Block>();
-							cuboid.iterator().forEachRemaining(blocks::add);
-							
-							blocks.stream().forEach(block -> {
-								if(block.getType() == lastMat.getType()){
-									block.setType(materials[x].getType());
-									block.setData((byte) materials[x].getDurability());
-								}
-							}); lastMat = materials[x]; x++; if(x >= materials.length) x = 0;
-							return;
-							
-						}
-						
-					}.runTaskTimer(OmniLobbies.getInstance(), 15L, 15L),
-					
 					new BukkitRunnable() {
 
 						@Override
@@ -264,63 +196,7 @@ public class SkywarsLobby extends SidedLobby {
 			
 		}
 		
-		return Arrays.asList(
-				new BukkitRunnable(){
-					
-					@Override
-					public void run() {
-						
-						Cuboid cuboid = new Cuboid(
-								scan.get("MAIN_LOBBY_PORTAL_POS1").get(0),
-								scan.get("MAIN_LOBBY_PORTAL_POS2").get(0)
-								);
-						
-						List<Block> blocks = new ArrayList<Block>();
-						cuboid.iterator().forEachRemaining(blocks::add);
-						
-						blocks.stream().forEach(block -> {
-							if(block.getType() == Material.AIR) {
-								if(block.getLocation().getBlockY() != scan.get("MAIN_LOBBY_PORTAL_POS2").get(0).getBlockY())
-									block.setType(Material.STATIONARY_WATER);
-							}
-						});
-						return;
-						
-					}
-					
-				}.runTaskLater(OmniLobbies.getInstance(), 15L),
-				
-				new BukkitRunnable() {
-
-					@Override
-					public void run() {
-						
-						for(LobbySystem system : getSystems()) {
-							
-							system.setup(instance);
-							system.start();
-							continue;
-							
-						}
-						
-					}
-					
-				}.runTaskLater(OmniLobbies.getInstance(), 25L),
-				
-				new BukkitRunnable() {
-					
-					@Override
-					public void run() {
-						
-						CitizensAPI.getNPCRegistries().forEach(registry -> {
-							
-							registry.deregisterAll();
-							
-						});
-						
-					}
-					
-				}.runTaskLater(OmniLobbies.getInstance(), 20L));
+		return Arrays.asList();
 		
 	}
 
@@ -369,12 +245,8 @@ public class SkywarsLobby extends SidedLobby {
 				    put("LETTER_Z_POS2", Material.WOOL);
 				    put("NPC_Z_PIRATE", Material.JACK_O_LANTERN);
 				    put("NPC_Z_PIRATE", Material.PUMPKIN);
-				    put("WEEK_PRIZE_TEXT", Material.BLAZE_POWDER);
-				    put("WEEK_PRIZE_TOP1", Material.GOLD_BLOCK);
-				    put("WEEK_PRIZE_TOP2", Material.IRON_BLOCK);
-				    put("WEEK_PRIZE_TOP3", Material.STONE);
 				    put("MYSTERY_BOX", Material.IRON_INGOT);
-				    put("SKYWARS_SOLO_Z", Material.NETHERRACK);
+				    put("SKYWARS_SOLO_Z", Material.QUARTZ_BLOCK);
 				    put("SKYWARS_TEAM_Z", Material.SOUL_SAND);
 				    put("SKYWARS_SOLO_NORMAL", Material.GRASS);
 				    put("SKYWARS_TEAM_NORMAL", Material.SNOW_BLOCK);
@@ -423,7 +295,7 @@ public class SkywarsLobby extends SidedLobby {
 		if(systems != null)
 			return systems;
 		
-		return Arrays.asList(new WeekPrizeSystem(), new CannonSystem(), new SkywarsJoinSystem());
+		return Arrays.asList(new CannonSystem(), new SkywarsJoinSystem());
 	}
 	
 	@Override
@@ -454,7 +326,7 @@ public class SkywarsLobby extends SidedLobby {
 				
 						for(World w : Bukkit.getWorlds()){
 					
-							w.setTime(side == SKYWARS_NORMAL_SIDE ? 1800 : 18000);
+							w.setTime(side == SKYWARS_NORMAL_SIDE ? 1800 : 6000);
 					
 							w.setStorm(false);
 							w.setThundering(false);
@@ -514,11 +386,7 @@ public class SkywarsLobby extends SidedLobby {
 		player.getInventory().setItem(2, SkywarsLobbyItem.LOOT.getBuilder()
 				.hideAtributes()
 				.build());
-		
-		player.getInventory().setItem(4, SkywarsLobbyItem.SHOP.getBuilder()
-				.hideAtributes()
-				.build());
-		
+
 		player.getInventory().setItem(8, SkywarsLobbyItem.LOBBY_SELECTOR.getBuilder()
 				.hideAtributes()
 				.build());

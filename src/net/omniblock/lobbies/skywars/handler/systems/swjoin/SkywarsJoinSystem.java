@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.omniblock.lobbies.skywars.handler.systems.shop.SkywarsBox;
+import net.omniblock.lobbies.skywars.handler.systems.shop.SkywarsShop;
+import net.omniblock.shop.systems.GameShopHandler;
+import net.omniblock.shop.systems.MysteryBoxHandler;
+import net.omniblock.shop.systems.box.MysteryBox;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
@@ -20,7 +25,9 @@ public class SkywarsJoinSystem implements LobbySystem {
 
 	public static List<Entry<SkywarsJoinType, Entry<NPC, Hologram>>> displayedEntries = new ArrayList<Entry<SkywarsJoinType, Entry<NPC, Hologram>>>();
 	protected SkywarsLobby lobby;
-	
+
+	protected static SkywarsBox mysteryBox;
+
 	@Override
 	public void setup(Lobby lobby) {
 		
@@ -34,10 +41,13 @@ public class SkywarsJoinSystem implements LobbySystem {
 
 	@Override
 	public void start() {
-		
+
 		if(this.lobby == null)
 			return;
-		
+
+		//loadShopHandler();
+		this.lobby.getLastScan().get("MYSTERY_BOX").forEach(location -> loadMysteryBoxHandler(location) );
+
 		if(this.lobby.getSide() != null) {
 			
 			List<Entry<SkywarsJoinType, Entry<NPC, Hologram>>> cache = Lists.newArrayList();
@@ -139,5 +149,18 @@ public class SkywarsJoinSystem implements LobbySystem {
 
 	@Override
 	public void destroy() { return; }
-	
+
+	protected void loadMysteryBoxHandler(Location location){
+
+		mysteryBox = new SkywarsBox(location);
+		MysteryBoxHandler.register(mysteryBox);
+
+	}
+
+	protected void loadShopHandler(){
+
+		//shopHandlers = new SkywarsShop();
+		//GameShopHandler.setup(shopHandlers);
+
+	}
 }

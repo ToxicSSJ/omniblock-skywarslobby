@@ -1,5 +1,7 @@
 package net.omniblock.lobbies.skywars;
 
+import net.omniblock.lobbies.skywars.handler.systems.shop.SkywarsShop;
+import net.omniblock.shop.systems.GameShopHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.omniblock.lobbies.api.LobbyHandler;
@@ -7,22 +9,27 @@ import net.omniblock.lobbies.skywars.handler.SkywarsLobby;
 import net.omniblock.network.handlers.Handlers;
 import net.omniblock.network.handlers.network.NetworkManager;
 import net.omniblock.packets.object.external.ServerType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class SkywarsLobbyPlugin extends JavaPlugin {
 
 	private static SkywarsLobbyPlugin instance;
 	private static SkywarsLobby lobby;
-	
+
+	protected static SkywarsShop shopHandlers;
+
 	@Override
 	public void onEnable() {
 		
 		instance = this;
+
 		lobby = new SkywarsLobby();
-		
+
 		if(NetworkManager.getServertype() != ServerType.SKYWARS_LOBBY_SERVER) {
 			
 			Handlers.LOGGER.sendModuleInfo("&7Se ha registrado SkywarsLobby v" + this.getDescription().getVersion() + "!");
 			Handlers.LOGGER.sendModuleMessage("OmniLobbies", "Se ha inicializado SkywarsLobby en modo API!");
+			loadShopHandler();
 			return;
 			
 		}
@@ -31,11 +38,26 @@ public class SkywarsLobbyPlugin extends JavaPlugin {
 		Handlers.LOGGER.sendModuleMessage("OmniLobbies", "Se ha inicializado este lobby como un SkywarsLobby!");
 		
 		LobbyHandler.startLobby(lobby);
+		loadShopHandler();
 		
 	}
 	
 	public static SkywarsLobbyPlugin getInstance() {
 		return instance;
 	}
-	
+
+	protected void loadShopHandler(){
+
+		new BukkitRunnable(){
+
+
+			@Override
+			public void run() {
+
+				shopHandlers =new SkywarsShop();
+				GameShopHandler.setup(shopHandlers);
+
+			}
+		}.runTaskLater(SkywarsLobbyPlugin.getInstance(), 50L);
+	}
 }

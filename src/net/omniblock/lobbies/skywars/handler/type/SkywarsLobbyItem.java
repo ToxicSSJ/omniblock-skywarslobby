@@ -22,12 +22,6 @@ public enum SkywarsLobbyItem {
 			.lore(TextUtil.format("&7que te han hecho los demás. Si deseas adquirir más items"))
 			.lore(TextUtil.format("&7para tu botín, Visita nuestra tienda: &btienda.omniblock.net"))),
 
-	SHOP(new ItemBuilder(Material.GOLD_INGOT).amount(1).name(TextUtil.format("&aTienda &7(Click derecho)"))
-			.lore(TextUtil.format("")).lore(TextUtil.format("&8&m-&r &7En la tienda podrás comprar mejoras"))
-			.lore(TextUtil.format("&7visuales para todas tus partidas de Skywars!"))
-			.lore(TextUtil.format("&7El manejo de la tienda se basa en tus OmniCoins"))
-			.lore(TextUtil.format("&7las cuales las ganas jugando partidas."))),
-
 	LOBBY_SELECTOR(new ItemBuilder(Material.HOPPER_MINECART).amount(1)
 			.name(TextUtil.format("&bLobbies de Skywars &7(Click derecho)")).lore(TextUtil.format(""))
 			.lore(TextUtil.format("&8&m-&r &7Revisa todas las lobbies disponibles"))

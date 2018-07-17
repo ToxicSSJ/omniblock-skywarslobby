@@ -1,5 +1,6 @@
 package net.omniblock.lobbies.skywars.handler.systems.shop;
 
+import net.omniblock.network.library.utils.TextUtil;
 import net.omniblock.shop.systems.box.MysteryBox;
 import net.omniblock.shop.systems.object.Element;
 import org.bukkit.Location;
@@ -40,8 +41,12 @@ public class SkywarsBox extends MysteryBox {
 
 				if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.LEFT_CLICK_BLOCK))
 					if(e.getClickedBlock().getLocation().equals(getBox().getLocation()))
-						if(e.getClickedBlock().getType().equals(getBox().getType()))
+						if(e.getClickedBlock().getType().equals(Material.CHEST)){
+
 							destroyBox();
+							e.getPlayer().sendMessage(TextUtil.format("&7&lSistema &a:: &c&lPróximamente.... "));
+
+						}
 			}
 		};
 	}

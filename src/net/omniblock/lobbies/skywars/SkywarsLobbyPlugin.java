@@ -58,6 +58,6 @@ public class SkywarsLobbyPlugin extends JavaPlugin {
 				GameShopHandler.setup(shopHandlers);
 
 			}
-		}.runTaskLater(SkywarsLobbyPlugin.getInstance(), 50L);
+		}.runTaskLater(SkywarsLobbyPlugin.getInstance(), 215L);
 	}
 }

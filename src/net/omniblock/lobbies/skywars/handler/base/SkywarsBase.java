@@ -359,12 +359,7 @@ public class SkywarsBase {
 			case CAGE:
 				
 				String CAGE_CODE = data_array[0];
-
-				for(net.omniblock.shop.systems.object.Element element : GameShopHandler.getShop().getValue().getElements())
-					if(element.getCode().equals(CAGE_CODE))
-						return element;
-
-				break;
+				return CAGE_CODE;
 				
 			case EXTRA_INFO:
 				

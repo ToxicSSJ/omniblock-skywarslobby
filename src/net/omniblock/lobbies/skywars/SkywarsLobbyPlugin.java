@@ -29,7 +29,6 @@ public class SkywarsLobbyPlugin extends JavaPlugin {
 			
 			Handlers.LOGGER.sendModuleInfo("&7Se ha registrado SkywarsLobby v" + this.getDescription().getVersion() + "!");
 			Handlers.LOGGER.sendModuleMessage("OmniLobbies", "Se ha inicializado SkywarsLobby en modo API!");
-			loadShopHandler();
 			return;
 			
 		}
@@ -38,7 +37,6 @@ public class SkywarsLobbyPlugin extends JavaPlugin {
 		Handlers.LOGGER.sendModuleMessage("OmniLobbies", "Se ha inicializado este lobby como un SkywarsLobby!");
 		
 		LobbyHandler.startLobby(lobby);
-		loadShopHandler();
 		
 	}
 	
@@ -46,18 +44,4 @@ public class SkywarsLobbyPlugin extends JavaPlugin {
 		return instance;
 	}
 
-	protected void loadShopHandler(){
-
-		new BukkitRunnable(){
-
-
-			@Override
-			public void run() {
-
-				shopHandlers =new SkywarsShop();
-				GameShopHandler.setup(shopHandlers);
-
-			}
-		}.runTaskLater(SkywarsLobbyPlugin.getInstance(), 215L);
-	}
 }

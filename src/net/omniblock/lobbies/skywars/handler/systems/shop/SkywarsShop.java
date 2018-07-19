@@ -298,7 +298,7 @@ public class SkywarsShop extends GameShop {
 							.lore(TextUtil.format("&8&m -&r &7Comienza a utilizar este diseño único."))
 							.lore(TextUtil.format("&7Se la envidia de todos."))
 							.lore("")
-							.lore(TextUtil.format( ((Element) SkywarsBase.getSelectedItem(SkywarsBase.SelectedItemType.CAGE, SkywarsBase.getSelectedItems(pl))).getCode().equalsIgnoreCase(element.getCode()) ?
+							.lore(TextUtil.format( ((String) SkywarsBase.getSelectedItem(SkywarsBase.SelectedItemType.CAGE, SkywarsBase.getSelectedItems(pl))).equalsIgnoreCase(element.getCode()) ?
 									"       &a¡Usando!" :
 									" &7(Click para usar)"))
 

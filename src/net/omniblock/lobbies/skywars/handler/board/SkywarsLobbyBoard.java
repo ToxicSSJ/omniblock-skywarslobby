@@ -89,71 +89,71 @@ public class SkywarsLobbyBoard implements LobbyBoard {
 	public static String sbTitle(int a){
 		 switch(a){
 			 case 1:
-				 return TextUtil.format("&9&l    SkyWars &f&lZ   ");
+				 return TextUtil.format("&9&l     SkyWars    ");
 			 case 2:
-				 return TextUtil.format("&8&l    SkyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 3:
-			 	 return TextUtil.format("&b&l    SkyWars &c&lZ    ");
+			 	 return TextUtil.format("&b&l     SkyWars     ");
 			 case 4:
-				 return TextUtil.format("&9&l    &b&lSkyWars &c&lZ    ");
+				 return TextUtil.format("&9&l     &b&lSkyWars     ");
 			 case 5:
-				 return TextUtil.format("&8&l    &9&lS&b&lkyWars &c&lZ    ");	 
+				 return TextUtil.format("&8&l     &9&lS&b&lkyWars     ");	 
 			 case 6:
-				 return TextUtil.format("&8&l    S&9&lk&b&lyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     S&9&lk&b&lyWars     ");
 			 case 7:
-				 return TextUtil.format("&8&l    Sk&9&ly&b&lWars &c&lZ    ");
+				 return TextUtil.format("&8&l     Sk&9&ly&b&lWars     ");
 			 case 8:
-				 return TextUtil.format("&8&l    Sky&9&lW&b&lars &c&lZ    ");
+				 return TextUtil.format("&8&l     Sky&9&lW&b&lars     ");
 			 case 9:
-				 return TextUtil.format("&8&l    SkyW&9&la&b&lrs &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyW&9&la&b&lrs     ");
 			 case 10:
-				 return TextUtil.format("&8&l    SkyWa&9&lr&b&ls &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWa&9&lr&b&ls     ");
 			 case 11:
-				 return TextUtil.format("&8&l    SkyWar&9&ls&b&l &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWar&9&ls&b&l     ");
 			 case 12:
-				 return TextUtil.format("&8&l    SkyWars &f&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 13:
-				 return TextUtil.format("&8&l    SkyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 14:
-				 return TextUtil.format("&8&l    SkyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 15:
-				 return TextUtil.format("&8&l    SkyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 16:
-				 return TextUtil.format("&8&l    SkyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 18:
-				 return TextUtil.format("&8&l    SkyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 19:
-				 return TextUtil.format("&8&l    SkyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 20:
-				 return TextUtil.format("&8&l    SkyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 21:
-				 return TextUtil.format("&9&l    &8&lSkyWars &c&lZ    ");
+				 return TextUtil.format("&9&l     &8&lSkyWars     ");
 			 case 22:
-				 return TextUtil.format("&b&l    &9&lS&8&lkyWars &c&lZ    ");
+				 return TextUtil.format("&b&l     &9&lS&8&lkyWars     ");
 			 case 23:
-				 return TextUtil.format("&b&l    S&9&lk&8&lyWars &c&lZ    ");
+				 return TextUtil.format("&b&l     S&9&lk&8&lyWars     ");
 			 case 24:
-				 return TextUtil.format("&b&l    Sk&9&ly&8&lWars &c&lZ    ");
+				 return TextUtil.format("&b&l     Sk&9&ly&8&lWars     ");
 			 case 25:
-				 return TextUtil.format("&b&l    Sky&9&lW&8&lars &c&lZ    ");
+				 return TextUtil.format("&b&l     Sky&9&lW&8&lars     ");
 			 case 26:
-				 return TextUtil.format("&b&l    SkyW&9&la&8&lrs &c&lZ    ");
+				 return TextUtil.format("&b&l     SkyW&9&la&8&lrs     ");
 			 case 27:
-				 return TextUtil.format("&b&l    SkyWa&9&lr&8&ls &c&lZ    ");
+				 return TextUtil.format("&b&l     SkyWa&9&lr&8&ls     ");
 			 case 28:
-				 return TextUtil.format("&b&l    SkyWar&9&ls &c&lZ    ");
+				 return TextUtil.format("&b&l     SkyWar&9&ls     ");
 			 case 29:
-				 return TextUtil.format("&b&l    SkyWars &f&lZ    ");
+				 return TextUtil.format("&b&l     SkyWars     ");
 			 case 30:
-				 return TextUtil.format("&b&l    SkyWars &f&lZ    ");
+				 return TextUtil.format("&b&l     SkyWars     ");
 			 case 31:
-				 return TextUtil.format("&b&l    SkyWars &f&lZ    ");
+				 return TextUtil.format("&b&l     SkyWars     ");
 			 case 32:
-				 return TextUtil.format("&b&l    SkyWars &f&lZ    ");
+				 return TextUtil.format("&b&l     SkyWars     ");
 			 case 33:
-				 return TextUtil.format("&8&l    SkyWars &c&lZ    ");
+				 return TextUtil.format("&8&l     SkyWars     ");
 			 case 34:
-				 return TextUtil.format("&9&l    SkyWars &f&lZ    ");
+				 return TextUtil.format("&9&l     SkyWars     ");
 				 
 		 }
 		 

@@ -318,9 +318,15 @@ public class SkywarsBase {
 				String[] data_array = stats.split(";");
 				String AVERAGE_STR = data_array[4];
 				
+				double AVERAGE_DBL = Double.parseDouble(AVERAGE_STR);
+				AVERAGE_STR = String.format("%.2f", AVERAGE_DBL);
+				
 				return AVERAGE_STR;
 				
-			} catch(Exception e) {
+			}catch(NumberFormatException ignore){
+				return stats.split(";")[4];
+			}
+			catch(Exception e) {
 				e.printStackTrace();
 			}
 			

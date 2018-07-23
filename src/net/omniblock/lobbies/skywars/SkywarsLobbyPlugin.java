@@ -1,7 +1,6 @@
 package net.omniblock.lobbies.skywars;
 
 import net.omniblock.lobbies.skywars.handler.systems.shop.SkywarsShop;
-import net.omniblock.shop.systems.GameShopHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.omniblock.lobbies.api.LobbyHandler;
@@ -9,7 +8,6 @@ import net.omniblock.lobbies.skywars.handler.SkywarsLobby;
 import net.omniblock.network.handlers.Handlers;
 import net.omniblock.network.handlers.network.NetworkManager;
 import net.omniblock.packets.object.external.ServerType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class SkywarsLobbyPlugin extends JavaPlugin {
 

@@ -45,17 +45,16 @@ public class SkywarsJoinSystem implements LobbySystem {
 
 		if(this.lobby == null)
 			return;
-
-		SkywarsExecutor skywarsExecutor = new SkywarsExecutor();
+		
 		String[] commands = new String[]{
 				"lobby",
-				"hub"
-
+				"hub",
+				"salir",
+				"abandonar"
 		};
 
-		for (String command : commands)
+		for(String command : commands)
 			SkywarsLobbyPlugin.getInstance().getCommand(command).setExecutor(new SkywarsExecutor());
-
 
 		loadShopHandler();
 		this.lobby.getLastScan().get("MYSTERY_BOX").forEach(location -> loadMysteryBoxHandler(location) );
@@ -175,4 +174,5 @@ public class SkywarsJoinSystem implements LobbySystem {
 		GameShopHandler.setup(shopHandlers);
 
 	}
+	
 }

@@ -7,9 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.omniblock.shop.systems.GameShopHandler;
 import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import net.omniblock.network.handlers.base.sql.make.MakeAdvancedSQLQuery;
@@ -20,8 +18,6 @@ import net.omniblock.network.handlers.base.sql.type.TableType;
 import net.omniblock.network.handlers.base.sql.util.Resolver;
 import net.omniblock.network.handlers.base.sql.util.SQLResultSet;
 import net.omniblock.network.handlers.base.sql.util.VariableUtils;
-
-import javax.xml.bind.Element;
 
 public class SkywarsBase {
 

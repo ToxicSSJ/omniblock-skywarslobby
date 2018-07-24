@@ -14,7 +14,9 @@ public class SkywarsExecutor implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		if(cmd.getName().equalsIgnoreCase("hub") ||
-				cmd.getName().equalsIgnoreCase("lobby")){
+				cmd.getName().equalsIgnoreCase("lobby") ||
+				cmd.getName().equalsIgnoreCase("salir") ||
+				cmd.getName().equalsIgnoreCase("abandonar")){
 
 			Player player = (Player) sender;
 
@@ -28,9 +30,7 @@ public class SkywarsExecutor implements CommandExecutor {
 
 		}
 
-
-
-
 		return false;
+		
 	}
 }

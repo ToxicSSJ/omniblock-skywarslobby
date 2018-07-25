@@ -29,11 +29,4 @@ public abstract interface CannonSlime {
 		
 	}
 	
-	public static void setSlimeLiveSeconds(Slime slime, int seconds){
-		
-		slime.setTicksLived(seconds * 20);
-		return;
-		
-	}
-	
 }

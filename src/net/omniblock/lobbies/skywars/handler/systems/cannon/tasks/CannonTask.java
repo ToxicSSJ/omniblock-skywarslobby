@@ -1,10 +1,10 @@
 package net.omniblock.lobbies.skywars.handler.systems.cannon.tasks;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Logger;
 
+import net.omniblock.lobbies.skywars.SkywarsLobbyPlugin;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -24,153 +24,123 @@ import net.omniblock.network.library.utils.NumberUtil;
 
 public class CannonTask extends BukkitRunnable {
 
-	int round = 0;
-	int maxRound = 320;
-	
-	int cannon = -1;
-	int maxCannon = 0;
-	
-	Map<Block, Block> towardsBlocks = new HashMap<Block, Block>();
-	Map<Block, BlockFace> faceBlocks = new HashMap<Block, BlockFace>();
+	private int logicIteration = 0;
+	private int maxLogicIteration = 10;
+	private int currentFiringCannon = 0;
+	private boolean coolingCannons = false;
+	private List<CannonInfo> cannons = new ArrayList<>();
 	
 	public CannonTask(SkywarsLobby lobby){
-		
-		List<Location> locations = lobby.getLastScan().get("BOAT_CANNON");
-		
-		for(Location location : locations){
+
+		for(Location cannonLocation : lobby.getLastScan().get("BOAT_CANNON")){
+			Block cannonBlock = cannonLocation.getBlock();
+			Location offsetLocation = null;
 			
-			Block block = location.getBlock();
-			
-			if(block.getRelative(BlockFace.EAST).getType() == Material.AIR){
-				
-				towardsBlocks.put(block.getRelative(BlockFace.UP), block.getRelative(BlockFace.UP).getRelative(BlockFace.EAST));
-				faceBlocks.put(block.getRelative(BlockFace.UP), BlockFace.EAST);
-				continue;
-				
-			} else if(block.getRelative(BlockFace.WEST).getType() == Material.AIR){
-				
-				towardsBlocks.put(block.getRelative(BlockFace.UP), block.getRelative(BlockFace.UP).getRelative(BlockFace.WEST));
-				faceBlocks.put(block.getRelative(BlockFace.UP), BlockFace.WEST);
-				continue;
-				
-			} else if(block.getRelative(BlockFace.NORTH).getType() == Material.AIR){
-				
-				towardsBlocks.put(block.getRelative(BlockFace.UP), block.getRelative(BlockFace.UP).getRelative(BlockFace.NORTH));
-				faceBlocks.put(block.getRelative(BlockFace.UP), BlockFace.NORTH);
-				continue;
-				
-			} else if(block.getRelative(BlockFace.SOUTH).getType() == Material.AIR){
-				
-				towardsBlocks.put(block.getRelative(BlockFace.UP), block.getRelative(BlockFace.UP).getRelative(BlockFace.SOUTH));
-				faceBlocks.put(block.getRelative(BlockFace.UP), BlockFace.SOUTH);
-				continue;
-				
+			if(cannonBlock.getRelative(BlockFace.EAST).getType() == Material.AIR){
+				offsetLocation = cannonBlock.getRelative(BlockFace.EAST).getLocation();
+			} else if(cannonBlock.getRelative(BlockFace.WEST).getType() == Material.AIR){
+				offsetLocation = cannonBlock.getRelative(BlockFace.WEST).getLocation();
+			} else if(cannonBlock.getRelative(BlockFace.NORTH).getType() == Material.AIR){
+				offsetLocation = cannonBlock.getRelative(BlockFace.NORTH).getLocation();
+			} else if(cannonBlock.getRelative(BlockFace.SOUTH).getType() == Material.AIR){
+				offsetLocation = cannonBlock.getRelative(BlockFace.SOUTH).getLocation();
 			}
-			
+
+			System.out.println("SCAN LOC = " + cannonLocation);
+			System.out.println("OFFS LOC = " + offsetLocation);
+
+			if(offsetLocation == null) {
+				Logger log = SkywarsLobbyPlugin.getInstance().getLogger();
+				log.warning("Un cañon parece no tener un bloque proximo libre hacia donde disparar, este cañon se omitira de la logica de disparo.");
+				log.warning("Localizacion del cañon: " + cannonLocation);
+				return;
+			}
+
+			cannons.add(new CannonInfo(cannonBlock.getLocation(), offsetLocation));
 		}
-		
-		maxCannon = towardsBlocks.size();
-		
 	}
 
 	@Override
 	public void run() {
+		if(true) return;
+
+		logicIteration++;
 		
-		round++;
-		
-		if(round >= maxRound){
-			
-			round = 0;
-			cannon = 0;
-			
+		if(logicIteration >= maxLogicIteration){
+			logicIteration = 0;
+			currentFiringCannon = 0;
+			coolingCannons = false;
 		}
-		
-		if(cannon != -1){
-			
-			if(cannon >= maxCannon){ cannon = -1; return; }
-			
-			List<Block> keys = new ArrayList<Block>();
-			
-			towardsBlocks.keySet().stream().forEach(k -> keys.add(k));
-			
-			Block key = keys.get(cannon);
-			BlockFace face = faceBlocks.get(key);
-			
-			Block value = towardsBlocks.get(key);
-			Block newvalue = value;
-			
-			for(int i = 0; i >= 12; i++){
-				
-				newvalue = newvalue.getRelative(face);
-				continue;
-				
-			}
-			
-			ExplodeEffect effect = new ExplodeEffect(GeneralHandler.getEffectLibManager());
-			
-			effect.setLocation(key.getLocation());
-			effect.setTargetLocation(key.getLocation());
-			
-			effect.visibleRange = 200;
-			effect.iterations = 2;
-			effect.start();
-			
-			Slime slime = CannonSlime.craftCannonSlime(key.getLocation());
-			CannonSlime.setSlimeLiveSeconds(slime, 35);
-			
-			moveSlimeBullet(slime, newvalue.getLocation());
-			explodeWhenHit(slime);
-			cannon++;
-			
+
+		if(currentFiringCannon == cannons.size()) {
+			coolingCannons = true;
 		}
-		
+
+		if(coolingCannons) {
+			return;
+		}
+
+		CannonInfo cannonInfo = cannons.get(currentFiringCannon);
+		Location cannonLocation = cannonInfo.location.clone();
+
+		ExplodeEffect effect = new ExplodeEffect(GeneralHandler.getEffectLibManager());
+		effect.setLocation(cannonLocation);
+		effect.setTargetLocation(cannonLocation);
+		effect.visibleRange = 200;
+		effect.iterations = 2;
+		effect.start();
+
+		Slime slime = CannonSlime.craftCannonSlime(cannonLocation);
+		moveCannonBullet(slime, cannonInfo);
+		aplyCannonBulletLogic(slime);
+
+		cannonLocation.getWorld().playSound(cannonLocation, Sound.ENTITY_GENERIC_EXPLODE, 5, -4);
+		ParticleEffect.CLOUD.display(1, 1, 1, 1, 30, cannonLocation.clone().add(.5, 0, .5), 200);
+
+		currentFiringCannon++;
 	}
 	
-	public void explodeWhenHit(Slime bullet){
+	public void aplyCannonBulletLogic(Slime entity){
 		
 		new BukkitRunnable(){
-
-			int round = 0;
-			
 			@Override
 			public void run() {
-				
 				boolean explode = false;
 				
-				if(bullet.isDead()){ cancel(); return; }
-				
-				if(bullet.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() != Material.AIR) explode = true;
-				if(round == 40) explode = true;
-				
-				if(explode){
-					
-					bullet.getWorld().playSound(bullet.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 20, -5);
-					ParticleEffect.CLOUD.display(1, 1, 1, 1, 30, bullet.getLocation().add(.5, 0, .5), 200);
-					
-					bullet.remove();
-					
+				if(entity.isDead()){
+					cancel();
+					return;
 				}
-				
-				round++;
-				
+
+				//if(entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() != Material.AIR) explode = true;
+
+				if(entity.getTicksLived() >= 100){
+					entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ITEM_PICKUP, 5, -3);
+					ParticleEffect.VILLAGER_HAPPY.display(1, 1, 1, 1, 10, entity.getLocation().add(.5, 0, .5), 200);
+					entity.remove();
+				}
 			}
-			
 		}.runTaskTimer(OmniLobbies.getInstance(), 5L, 5L);
-		
 	}
 	
-	public void moveSlimeBullet(Slime bullet, Location to) {
+	public void moveCannonBullet(Slime entity, CannonInfo cannonInfo) {
+
+		double multiply = NumberUtil.getRandomDouble(3, 4);
 		
-		double multiply = NumberUtil.getRandomDouble(3.6, 5.2);
-		
-		Location loc = bullet.getLocation();
-        double x = loc.getX() - to.getX();
-        double y = loc.getY() - to.getY();
-        double z = loc.getZ() - to.getZ();
-        
-        Vector v = new Vector(x, y, z).normalize().multiply(-multiply);
-		bullet.setVelocity(v);
-		
+		Location entityLocation = entity.getLocation();
+
+		Vector velocity = cannonInfo.offsetLocation.clone().toVector().subtract(cannonInfo.location.clone().toVector());
+		entity.setVelocity(velocity.multiply(multiply));
+	}
+
+	private class CannonInfo {
+		private Location location;
+		private Location offsetLocation;
+
+		private CannonInfo(Location location, Location offsetLocation) {
+			this.location = location;
+			this.offsetLocation = offsetLocation;
+		}
 	}
 	
 }

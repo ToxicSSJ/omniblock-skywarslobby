@@ -25,7 +25,7 @@ import net.omniblock.network.library.utils.NumberUtil;
 public class CannonTask extends BukkitRunnable {
 
 	private int logicIteration = 0;
-	private int maxLogicIteration = 10;
+	private int maxLogicIteration = 60;
 	private int currentFiringCannon = 0;
 	private boolean coolingCannons = false;
 	private List<CannonInfo> cannons = new ArrayList<>();
@@ -46,9 +46,6 @@ public class CannonTask extends BukkitRunnable {
 				offsetLocation = cannonBlock.getRelative(BlockFace.SOUTH).getLocation();
 			}
 
-			System.out.println("SCAN LOC = " + cannonLocation);
-			System.out.println("OFFS LOC = " + offsetLocation);
-
 			if(offsetLocation == null) {
 				Logger log = SkywarsLobbyPlugin.getInstance().getLogger();
 				log.warning("Un cañon parece no tener un bloque proximo libre hacia donde disparar, este cañon se omitira de la logica de disparo.");
@@ -62,8 +59,6 @@ public class CannonTask extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if(true) return;
-
 		logicIteration++;
 		
 		if(logicIteration >= maxLogicIteration){
@@ -90,7 +85,7 @@ public class CannonTask extends BukkitRunnable {
 		effect.iterations = 2;
 		effect.start();
 
-		Slime slime = CannonSlime.craftCannonSlime(cannonLocation);
+		Slime slime = CannonSlime.craftCannonSlime(cannonInfo.offsetLocation.clone());
 		moveCannonBullet(slime, cannonInfo);
 		aplyCannonBulletLogic(slime);
 
@@ -114,7 +109,7 @@ public class CannonTask extends BukkitRunnable {
 
 				//if(entity.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() != Material.AIR) explode = true;
 
-				if(entity.getTicksLived() >= 100){
+				if(entity.getTicksLived() >= 200){
 					entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_ITEM_PICKUP, 5, -3);
 					ParticleEffect.VILLAGER_HAPPY.display(1, 1, 1, 1, 10, entity.getLocation().add(.5, 0, .5), 200);
 					entity.remove();
@@ -125,12 +120,14 @@ public class CannonTask extends BukkitRunnable {
 	
 	public void moveCannonBullet(Slime entity, CannonInfo cannonInfo) {
 
-		double multiply = NumberUtil.getRandomDouble(3, 4);
+		double multiply = NumberUtil.getRandomDouble(2, 4);
 		
 		Location entityLocation = entity.getLocation();
 
 		Vector velocity = cannonInfo.offsetLocation.clone().toVector().subtract(cannonInfo.location.clone().toVector());
-		entity.setVelocity(velocity.multiply(multiply));
+		entity.setVelocity(velocity.normalize().multiply(multiply));
+
+		System.out.println("VELOCITY VECTOR = " + velocity);
 	}
 
 	private class CannonInfo {

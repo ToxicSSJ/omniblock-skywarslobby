@@ -126,8 +126,6 @@ public class CannonTask extends BukkitRunnable {
 
 		Vector velocity = cannonInfo.offsetLocation.clone().toVector().subtract(cannonInfo.location.clone().toVector());
 		entity.setVelocity(velocity.normalize().multiply(multiply));
-
-		System.out.println("VELOCITY VECTOR = " + velocity);
 	}
 
 	private class CannonInfo {

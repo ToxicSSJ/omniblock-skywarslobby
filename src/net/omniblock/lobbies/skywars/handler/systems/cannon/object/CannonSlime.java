@@ -24,7 +24,9 @@ public abstract interface CannonSlime {
 		cannon_slime.setSize(2);
 		cannon_slime.setInvulnerable(true);
 		
-		cannon_slime.setCustomName(TextUtil.format("&4&l¡Bala de Cañon!"));
+		cannon_slime.setCustomName(TextUtil.format("&3&l¡Bala de Cañon!"));
+		cannon_slime.setCustomNameVisible(true);
+
 		return cannon_slime;
 		
 	}

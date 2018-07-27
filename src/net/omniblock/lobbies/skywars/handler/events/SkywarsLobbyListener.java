@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockIgniteEvent.IgniteCause;
+import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import net.omniblock.lobbies.apps.general.GeneralHandler;
@@ -176,6 +177,11 @@ public class SkywarsLobbyListener implements Listener {
 
 	private void openAchievements(Player player) {
 
+	}
+
+	@EventHandler
+	public void event(EntityTargetEvent e) {
+		e.setCancelled(true);
 	}
 	
 }
